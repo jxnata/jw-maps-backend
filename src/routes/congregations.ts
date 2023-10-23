@@ -1,10 +1,11 @@
 import { Express } from 'express';
 import auth from '../middleware/auth';
+import master from '../middleware/master';
 import Congregations from '../models/congregations';
 
 export default (app: Express) => {
 
-	app.post('/congregations', auth, async (req, res) => {
+	app.post('/congregations', master, async (req, res) => {
 		try {
 			const { name } = req.body;
 
@@ -16,7 +17,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/congregations', auth, async (req, res) => {
+	app.get('/congregations', master, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 
@@ -40,7 +41,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.put('/congregations/:id', auth, async (req, res) => {
+	app.put('/congregations/:id', master, async (req, res) => {
 		try {
 			const congregation = await Congregations.findByIdAndUpdate(
 				req.params.id,
@@ -58,7 +59,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.delete('/congregations/:id', auth, async (req, res) => {
+	app.delete('/congregations/:id', master, async (req, res) => {
 		try {
 			const congregation = await Congregations.findByIdAndDelete(req.params.id);
 

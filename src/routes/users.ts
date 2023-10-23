@@ -4,7 +4,7 @@ import master from '../middleware/master';
 import Users from '../models/users';
 
 export default (app: Express) => {
-	app.get('/users', auth, async (req, res) => {
+	app.get('/users', master, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 

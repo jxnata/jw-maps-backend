@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../constants';
+import IUser from '../models/users/types';
 import master from './master';
 
 const auth = (req: Request, res: Response, next: NextFunction) => {
@@ -20,10 +21,12 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 
 		const token = tokenParts[1];
 
-		jwt.verify(token, SECRET_KEY, (err) => {
+		jwt.verify(token, SECRET_KEY, (err, user) => {
 			if (err) {
 				return res.status(403).json({ message: 'Invalid authentication token.' });
 			}
+
+			(req as Request & { user?: IUser }).user = user as IUser;
 
 			next();
 		});

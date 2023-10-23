@@ -35,6 +35,10 @@ const MapSchema = new Schema<IMap>({
 	last_visited: {
 		type: Date,
 	},
+	last_visited_by: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Publisher',
+	},
 	created_at: {
 		type: Date,
 		default: Date.now,

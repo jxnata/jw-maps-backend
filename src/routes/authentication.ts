@@ -21,9 +21,9 @@ export default (app: Express) => {
 				return res.status(400).json({ message: 'Wrong username or password.' });
 			}
 
-			const token = jwt.sign({ userId: user._id }, SECRET_KEY);
-
 			const userWithoutPassword = { ...user.toObject(), password: undefined };
+
+			const token = jwt.sign({ user: userWithoutPassword }, SECRET_KEY);
 
 			res.json({ user: userWithoutPassword, token });
 		} catch (error) {

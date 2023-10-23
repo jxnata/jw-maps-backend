@@ -11,5 +11,6 @@ export default interface IMap extends Document {
     coordinates: [number, number];
     congregation: mongoose.Types.ObjectId
     last_visited: Date
+    last_visited_by: mongoose.Types.ObjectId
     created_at: Date
 }

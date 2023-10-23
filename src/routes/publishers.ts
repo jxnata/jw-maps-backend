@@ -12,7 +12,11 @@ export default (app: Express) => {
 
 			const code = authorization()
 
-			const publisher = await new Publishers({ name, congregation, authorization: code }).save();
+			const publisher = await new Publishers({
+				name,
+				congregation: req.user?.congregation || congregation,
+				authorization: code
+			}).save();
 
 			res.status(201).json({ publisher: publisher._id });
 		} catch (error) {
@@ -23,8 +27,9 @@ export default (app: Express) => {
 	app.get('/publishers', auth, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
+			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
 
-			const publishers = await Publishers.find().select('+authorization').skip(Number(skip)).limit(Number(limit));
+			const publishers = await Publishers.find(query).select('+authorization').skip(Number(skip)).limit(Number(limit));
 
 			res.json({ publishers, skip, limit });
 		} catch (error) {
@@ -64,11 +69,13 @@ export default (app: Express) => {
 
 	app.put('/publishers/reset/:id', auth, async (req, res) => {
 		try {
+			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+
 			const code = authorization();
 
 			const publisher = await Publishers
-				.findByIdAndUpdate(
-					req.params.id,
+				.findOneAndUpdate(
+					query,
 					{ authorization: code },
 					{ new: true }
 				)
@@ -88,10 +95,16 @@ export default (app: Express) => {
 		try {
 
 			const newUsername = req.body.name ? normalization(req.body.name) : undefined
+			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
-			const publisher = await Publishers.findByIdAndUpdate(
-				req.params.id,
-				{ ...req.body, authorization: undefined, username: newUsername },
+			const publisher = await Publishers.findOneAndUpdate(
+				query,
+				{
+					...req.body,
+					authorization: undefined,
+					username: newUsername,
+					congregation: req.isMaster ? req.body.congregation : req.user?.congregation
+				},
 				{ new: true }
 			);
 
@@ -107,10 +120,12 @@ export default (app: Express) => {
 
 	app.delete('/publishers/:id', auth, async (req, res) => {
 		try {
-			const publisher = await Publishers.findByIdAndDelete(req.params.id);
+			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+
+			const publisher = await Publishers.findOneAndDelete(query);
 
 			if (!publisher) {
-				return res.status(404).json({ message: 'Publishers not found.' });
+				return res.status(404).json({ message: 'Publisher not found.' });
 			}
 
 			res.json({ message: 'Publisher deleted successfully' });
