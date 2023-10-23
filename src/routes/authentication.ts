@@ -27,7 +27,6 @@ export default (app: Express) => {
 
 			res.json({ user: userWithoutPassword, token });
 		} catch (error) {
-			console.error(error);
 			res.status(500).json({ message: 'Error to authenticate user' });
 		}
 	});

@@ -30,9 +30,7 @@ const UserSchema = new Schema<IUser>({
 })
 
 UserSchema.pre<IUser>('save', async function (next) {
-	if (!this.isModified('password')) {
-		return next();
-	}
+	if (!this.isModified('password')) return next();
 
 	try {
 		const saltRounds = 10;

@@ -12,7 +12,7 @@ export default (app: Express) => {
 
 			res.json({ users, skip, limit });
 		} catch (error) {
-			return res.status(400).send({ message: 'An error occurred while listing users.' })
+			return res.status(400).json({ message: 'An error occurred while listing users.' })
 		}
 	})
 
@@ -42,10 +42,10 @@ export default (app: Express) => {
 				return res.status(404).json({ message: 'User not found.' });
 			}
 
-			return res.send({ user })
+			return res.json({ user })
 
 		} catch (error) {
-			return res.status(400).send({ message: 'An error occurred while fetching the user.' })
+			return res.status(400).json({ message: 'An error occurred while fetching the user.' })
 		}
 	})
 

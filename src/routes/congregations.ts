@@ -1,13 +1,14 @@
 import { Express } from 'express';
-import Congregation from '../models/congregations';
+import auth from '../middleware/auth';
+import Congregations from '../models/congregations';
 
 export default (app: Express) => {
 
-	app.post('/congregations', async (req, res) => {
+	app.post('/congregations', auth, async (req, res) => {
 		try {
 			const { name } = req.body;
 
-			const congregation = await new Congregation({ name }).save();
+			const congregation = await new Congregations({ name }).save();
 
 			res.status(201).json({ congregation: congregation._id });
 		} catch (error) {
@@ -15,11 +16,11 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/congregations', async (req, res) => {
+	app.get('/congregations', auth, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 
-			const congregations = await Congregation.find().skip(Number(skip)).limit(Number(limit));
+			const congregations = await Congregations.find().skip(Number(skip)).limit(Number(limit));
 
 			res.json({ congregations, skip, limit });
 		} catch (error) {
@@ -27,21 +28,21 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/congregations/:id', async (req, res) => {
+	app.get('/congregations/:id', auth, async (req, res) => {
 		try {
-			const congregation = await Congregation.findById(req.params.id);
+			const congregation = await Congregations.findById(req.params.id);
 			if (!congregation) {
 				return res.status(404).json({ message: 'Congregation not found.' });
 			}
-			res.json(congregation);
+			res.json({ congregation });
 		} catch (error) {
 			res.status(500).json({ message: 'Error to get congregation.' });
 		}
 	});
 
-	app.put('/congregations/:id', async (req, res) => {
+	app.put('/congregations/:id', auth, async (req, res) => {
 		try {
-			const congregation = await Congregation.findByIdAndUpdate(
+			const congregation = await Congregations.findByIdAndUpdate(
 				req.params.id,
 				req.body,
 				{ new: true }
@@ -57,9 +58,9 @@ export default (app: Express) => {
 		}
 	});
 
-	app.delete('/congregations/:id', async (req, res) => {
+	app.delete('/congregations/:id', auth, async (req, res) => {
 		try {
-			const congregation = await Congregation.findByIdAndDelete(req.params.id);
+			const congregation = await Congregations.findByIdAndDelete(req.params.id);
 
 			if (!congregation) {
 				return res.status(404).json({ message: 'Congregation not found.' });
