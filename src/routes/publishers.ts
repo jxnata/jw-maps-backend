@@ -45,7 +45,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.post('/publishers/auth', async (req, res) => {
+	app.post('/publishers/me', async (req, res) => {
 		try {
 			const publisher = await Publishers.findOne({
 				username: normalization(req.body.name),
@@ -101,7 +101,6 @@ export default (app: Express) => {
 
 			res.json({ publisher: publisher._id });
 		} catch (error) {
-			console.log(error)
 			res.status(500).json({ message: 'Error to update publisher.' });
 		}
 	});
