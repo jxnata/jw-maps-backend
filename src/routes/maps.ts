@@ -1,5 +1,4 @@
 import { Express } from 'express';
-import { normalization } from '../helpers/normalization';
 import auth from '../middleware/auth';
 import Maps from '../models/maps';
 
@@ -48,16 +47,12 @@ export default (app: Express) => {
 
 	app.put('/maps/:id', auth, async (req, res) => {
 		try {
-
-			const newUsername = req.body.name ? normalization(req.body.name) : undefined
 			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const map = await Maps.findOneAndUpdate(
 				query,
 				{
 					...req.body,
-					authorization: undefined,
-					username: newUsername,
 					congregation: req.isMaster ? req.body.congregation : req.user?.congregation
 				},
 				{ new: true }

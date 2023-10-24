@@ -34,6 +34,24 @@ export default (app: Express) => {
 		}
 	});
 
+	app.put('/users', master, async (req, res) => {
+		try {
+			const user = await Users.findByIdAndUpdate(
+				req.params.id,
+				req.body,
+				{ new: true }
+			);
+
+			if (!user) {
+				return res.status(404).json({ message: 'User not found.' });
+			}
+
+			res.status(201).json({ user: user._id });
+		} catch (error) {
+			res.status(500).json({ message: 'Error to create user.' });
+		}
+	});
+
 	app.get('/users/:id', auth, async (req, res) => {
 		try {
 			const user = await Users.findById(req.params.id).populate('congregation')
@@ -48,5 +66,19 @@ export default (app: Express) => {
 			return res.status(400).json({ message: 'An error occurred while fetching the user.' })
 		}
 	})
+
+	app.delete('/users/:id', master, async (req, res) => {
+		try {
+			const user = await Users.findByIdAndDelete(req.params.id);
+
+			if (!user) {
+				return res.status(404).json({ message: 'User not found.' });
+			}
+
+			res.json({ message: 'User deleted successfully' });
+		} catch (error) {
+			res.status(500).json({ message: 'Error to delete user.' });
+		}
+	});
 
 }
