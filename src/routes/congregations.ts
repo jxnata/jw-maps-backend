@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import auth from '../middleware/auth';
+import authUser from '../middleware/authUser';
 import master from '../middleware/master';
 import Congregations from '../models/congregations';
 
@@ -29,7 +29,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/congregations/:id', auth, async (req, res) => {
+	app.get('/congregations/:id', authUser, async (req, res) => {
 		try {
 			const congregation = await Congregations.findById(req.params.id);
 			if (!congregation) {

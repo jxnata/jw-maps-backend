@@ -1,4 +1,6 @@
+import bcrypt from 'bcrypt';
 import mongoose, { CallbackError, Schema } from 'mongoose';
+import { SALT_ROUNDS } from '../../constants';
 import { normalization } from '../../helpers/normalization';
 import IPublisher from './types';
 
@@ -15,11 +17,9 @@ const PublisherSchema = new Schema<IPublisher>({
 		trim: true,
 		select: false
 	},
-	authorization: {
+	passcode: {
 		type: String,
 		required: true,
-		uppercase: true,
-		trim: true,
 		select: false
 	},
 	congregation: {
@@ -33,11 +33,17 @@ const PublisherSchema = new Schema<IPublisher>({
 	},
 })
 
-PublisherSchema.pre('save', async function (next) {
-	if (!this.isModified('name')) return next();
-
+PublisherSchema.pre<IPublisher>('save', async function (next) {
 	try {
-		this.username = normalization(this.name);
+		if (this.isModified('name')) {
+			this.username = normalization(this.name);
+		}
+
+		if (this.isModified('passcode')) {
+			const hashedPasscode = await bcrypt.hash(this.passcode, SALT_ROUNDS);
+			this.passcode = hashedPasscode;
+		}
+
 		next();
 	} catch (error) {
 		return next(error as CallbackError);

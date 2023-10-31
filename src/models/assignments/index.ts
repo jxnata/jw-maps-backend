@@ -19,7 +19,8 @@ const AssignmentSchema = new Schema<IAssignment>({
 	},
 	found: {
 		type: Boolean,
-		required: true
+		required: true,
+		default: false
 	},
 	details: {
 		type: String

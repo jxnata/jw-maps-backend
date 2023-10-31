@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import auth from '../middleware/auth';
+import authUser from '../middleware/authUser';
 import master from '../middleware/master';
 import Users from '../models/users';
 
@@ -52,7 +52,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/users/:id', auth, async (req, res) => {
+	app.get('/users/:id', authUser, async (req, res) => {
 		try {
 			const user = await Users.findById(req.params.id).populate('congregation')
 

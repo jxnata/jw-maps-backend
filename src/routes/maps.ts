@@ -1,10 +1,10 @@
 import { Express } from 'express';
-import auth from '../middleware/auth';
+import authUser from '../middleware/authUser';
 import Maps from '../models/maps';
 
 export default (app: Express) => {
 
-	app.post('/maps', auth, async (req, res) => {
+	app.post('/maps', authUser, async (req, res) => {
 		try {
 			const { congregation } = req.body;
 
@@ -19,7 +19,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/maps', auth, async (req, res) => {
+	app.get('/maps', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
@@ -45,7 +45,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.put('/maps/:id', auth, async (req, res) => {
+	app.put('/maps/:id', authUser, async (req, res) => {
 		try {
 			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
@@ -68,7 +68,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.delete('/maps/:id', auth, async (req, res) => {
+	app.delete('/maps/:id', authUser, async (req, res) => {
 		try {
 			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 

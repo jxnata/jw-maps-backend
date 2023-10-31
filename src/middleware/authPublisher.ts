@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../constants';
-import IUser from '../models/users/types';
+import IPublisher from '../models/publishers/types';
 import master from './master';
 
-const auth = (req: Request, res: Response, next: NextFunction) => {
+const authPublisher = (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const authHeader = req.header('Authorization');
 
@@ -21,12 +21,14 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 
 		const token = tokenParts[1];
 
-		jwt.verify(token, SECRET_KEY, (err, user) => {
+		jwt.verify(token, SECRET_KEY, (err, callback) => {
 			if (err) {
 				return res.status(403).json({ message: 'Invalid authentication token.' });
 			}
 
-			(req as Request & { user?: IUser }).user = user as IUser;
+			if (typeof callback !== 'string') {
+				(req as Request & { publisher?: IPublisher }).publisher = callback?.publisher as IPublisher;
+			}
 
 			next();
 		});
@@ -35,4 +37,4 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 	}
 }
 
-export default auth
+export default authPublisher

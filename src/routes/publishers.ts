@@ -1,12 +1,15 @@
+import bcrypt from 'bcrypt';
 import { Express } from 'express';
+import { SALT_ROUNDS } from '../constants';
 import { authorization } from '../helpers/authorization';
 import { normalization } from '../helpers/normalization';
-import auth from '../middleware/auth';
+import authPublisher from '../middleware/authPublisher';
+import authUser from '../middleware/authUser';
 import Publishers from '../models/publishers';
 
 export default (app: Express) => {
 
-	app.post('/publishers', auth, async (req, res) => {
+	app.post('/publishers', authUser, async (req, res) => {
 		try {
 			const { name, congregation } = req.body;
 
@@ -15,21 +18,21 @@ export default (app: Express) => {
 			const publisher = await new Publishers({
 				name,
 				congregation: req.user?.congregation || congregation,
-				authorization: code
+				passcode: code
 			}).save();
 
-			res.status(201).json({ publisher: publisher._id });
+			res.status(201).json({ publisher: publisher._id, passcode: code });
 		} catch (error) {
 			res.status(500).json({ message: 'Error to create a publisher.' });
 		}
 	});
 
-	app.get('/publishers', auth, async (req, res) => {
+	app.get('/publishers', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
 
-			const publishers = await Publishers.find(query).select('+authorization').skip(Number(skip)).limit(Number(limit));
+			const publishers = await Publishers.find(query).select('+passcode').skip(Number(skip)).limit(Number(limit));
 
 			res.json({ publishers, skip, limit });
 		} catch (error) {
@@ -37,9 +40,9 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/publishers/:id', auth, async (req, res) => {
+	app.get('/publishers/:id', authUser, async (req, res) => {
 		try {
-			const publisher = await Publishers.findById(req.params.id).select('+authorization').populate('congregation');
+			const publisher = await Publishers.findById(req.params.id).populate('congregation');
 
 			if (!publisher) {
 				return res.status(404).json({ message: 'Publisher not found.' });
@@ -50,16 +53,12 @@ export default (app: Express) => {
 		}
 	});
 
-	app.post('/publishers/me', async (req, res) => {
+	app.get('/publishers/me', authPublisher, async (req, res) => {
 		try {
-			const publisher = await Publishers.findOne({
-				username: normalization(req.body.name),
-				authorization: req.body.authorization
-			})
-				.populate('congregation');
+			const publisher = await Publishers.findById(req.publisher?._id).populate('congregation');
 
 			if (!publisher) {
-				return res.status(404).json({ message: 'Invalid name or authorization code.' });
+				return res.status(404).json({ message: 'Publisher not found.' });
 			}
 			res.json({ publisher });
 		} catch (error) {
@@ -67,19 +66,21 @@ export default (app: Express) => {
 		}
 	});
 
-	app.put('/publishers/reset/:id', auth, async (req, res) => {
+	app.put('/publishers/reset/:id', authUser, async (req, res) => {
 		try {
 			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const code = authorization();
 
+			const hashedPasscode = await bcrypt.hash(code, SALT_ROUNDS);
+
 			const publisher = await Publishers
 				.findOneAndUpdate(
 					query,
-					{ authorization: code },
+					{ passcode: hashedPasscode },
 					{ new: true }
 				)
-				.select('+authorization');
+				.select('+passcode');
 
 			if (!publisher) {
 				return res.status(404).json({ message: 'Publisher not found.' });
@@ -91,7 +92,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.put('/publishers/:id', auth, async (req, res) => {
+	app.put('/publishers/:id', authUser, async (req, res) => {
 		try {
 
 			const newUsername = req.body.name ? normalization(req.body.name) : undefined
@@ -101,7 +102,7 @@ export default (app: Express) => {
 				query,
 				{
 					...req.body,
-					authorization: undefined,
+					passcode: undefined,
 					username: newUsername,
 					congregation: req.isMaster ? req.body.congregation : req.user?.congregation
 				},
@@ -118,7 +119,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.delete('/publishers/:id', auth, async (req, res) => {
+	app.delete('/publishers/:id', authUser, async (req, res) => {
 		try {
 			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
