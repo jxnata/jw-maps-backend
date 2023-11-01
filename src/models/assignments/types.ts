@@ -6,5 +6,6 @@ export default interface IAssignment extends Document {
     congregation: mongoose.Types.ObjectId
     details: string
     found: boolean
+    finished: boolean
     created_at: Date
 }

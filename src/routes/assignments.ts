@@ -2,6 +2,7 @@ import { Express } from 'express';
 import authPublisher from '../middleware/authPublisher';
 import authUser from '../middleware/authUser';
 import Assignments from '../models/assignments';
+import Maps from '../models/maps';
 
 export default (app: Express) => {
 
@@ -42,7 +43,23 @@ export default (app: Express) => {
 			const { skip = 0, limit = 10 } = req.query;
 
 			const assignments = await Assignments
-				.find({ publisher: req.publisher?._id })
+				.find({ publisher: req.publisher?._id, finished: false })
+				.populate('map')
+				.skip(Number(skip))
+				.limit(Number(limit));
+
+			res.json({ assignments, skip, limit });
+		} catch (error) {
+			res.status(500).json({ message: 'Error to list assignments.' });
+		}
+	});
+
+	app.get('/assignments/my/history', authPublisher, async (req, res) => {
+		try {
+			const { skip = 0, limit = 10 } = req.query;
+
+			const assignments = await Assignments
+				.find({ publisher: req.publisher?._id, finished: true })
 				.populate('map')
 				.skip(Number(skip))
 				.limit(Number(limit));
@@ -72,10 +89,11 @@ export default (app: Express) => {
 		try {
 
 			const assignment = await Assignments.findOneAndUpdate(
-				{ _id: req.params.id, publisher: req.publisher?._id },
+				{ _id: req.params.id, publisher: req.publisher?._id, finished: false },
 				{
 					found: req.body.found,
 					details: req.body.details,
+					finished: true
 				},
 				{ new: true }
 			);
@@ -83,6 +101,11 @@ export default (app: Express) => {
 			if (!assignment) {
 				return res.status(404).json({ message: 'Assignment not found.' });
 			}
+
+			await Maps.findByIdAndUpdate(assignment?.map, {
+				last_visited: Date.now(),
+				last_visited_by: assignment?.publisher
+			});
 
 			res.json({ assignment: assignment._id });
 		} catch (error) {
