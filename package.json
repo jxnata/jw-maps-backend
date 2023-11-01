@@ -1,5 +1,5 @@
 {
-	"name": "jw-maps-backend",
+	"name": "jw-toolkit-backend",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
