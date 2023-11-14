@@ -11,7 +11,7 @@ export default (app: Express) => {
 		try {
 			const { username, password } = req.body;
 
-			const user = await Users.findOne({ username }).select('+password');
+			const user = await Users.findOne({ username }).select('+password').populate('congregation');
 
 			if (!user) {
 				return res.status(400).json({ message: 'User not found.' });
@@ -37,7 +37,7 @@ export default (app: Express) => {
 		try {
 			const { username, passcode } = req.body;
 
-			const publisher = await Publishers.findOne({ username: normalization(username) }).select('+passcode');
+			const publisher = await Publishers.findOne({ username: normalization(username) }).select('+passcode').populate('congregation');
 
 			if (!publisher) {
 				return res.status(400).json({ message: 'Publisher not found.' });
