@@ -13,7 +13,7 @@ const run = async () => {
 	await mongoose.connect(process.env.DATABASE_URL!)
 
 	app.use(cors())
-	app.use(express.urlencoded({ limit: '10mb', extended: true }))
+	app.use(express.urlencoded({ limit: '4mb', extended: true }))
 	app.use(express.json())
 
 	routes(app)
