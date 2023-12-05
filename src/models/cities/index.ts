@@ -17,6 +17,6 @@ const CitySchema = new Schema<ICity>({
 	},
 })
 
-const model = mongoose.model<ICity>('City', CitySchema, 'Cities')
+const model = mongoose.model<ICity>('City', CitySchema, 'cities')
 
 export default model

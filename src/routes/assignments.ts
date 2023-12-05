@@ -28,7 +28,14 @@ export default (app: Express) => {
 
 			const assignments = await Assignments
 				.find(query)
-				.populate('publisher', 'map')
+				.populate(['publisher', {
+					path: 'map',
+					populate: {
+						path: 'city',
+						model: 'City',
+						select: 'name'
+					}
+				}])
 				.skip(Number(skip))
 				.limit(Number(limit));
 
@@ -44,7 +51,14 @@ export default (app: Express) => {
 
 			const assignments = await Assignments
 				.find({ publisher: req.publisher?._id, finished: false })
-				.populate('map')
+				.populate({
+					path: 'map',
+					populate: {
+						path: 'city',
+						model: 'City',
+						select: 'name'
+					}
+				})
 				.skip(Number(skip))
 				.limit(Number(limit));
 
@@ -60,7 +74,14 @@ export default (app: Express) => {
 
 			const assignments = await Assignments
 				.find({ publisher: req.publisher?._id, finished: true })
-				.populate('map')
+				.populate({
+					path: 'map',
+					populate: {
+						path: 'city',
+						model: 'City',
+						select: 'name'
+					}
+				})
 				.skip(Number(skip))
 				.limit(Number(limit));
 
@@ -74,7 +95,14 @@ export default (app: Express) => {
 		try {
 			const assignment = await Assignments
 				.findById(req.params.id)
-				.populate('map', 'publisher');
+				.populate(['publisher', {
+					path: 'map',
+					populate: {
+						path: 'city',
+						model: 'City',
+						select: 'name'
+					}
+				}]);
 
 			if (!assignment) {
 				return res.status(404).json({ message: 'Assignment not found.' });

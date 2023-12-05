@@ -24,7 +24,7 @@ export default (app: Express) => {
 			const { skip = 0, limit = 10 } = req.query;
 			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
 
-			const maps = await Maps.find(query).populate('last_visited_by').skip(Number(skip)).limit(Number(limit));
+			const maps = await Maps.find(query).populate(['city', 'last_visited_by']).skip(Number(skip)).limit(Number(limit));
 
 			res.json({ maps, skip, limit });
 		} catch (error) {
@@ -34,7 +34,7 @@ export default (app: Express) => {
 
 	app.get('/maps/:id', async (req, res) => {
 		try {
-			const map = await Maps.findById(req.params.id).populate('last_visited_by');
+			const map = await Maps.findById(req.params.id).populate(['city', 'last_visited_by']);
 
 			if (!map) {
 				return res.status(404).json({ message: 'Map not found.' });
