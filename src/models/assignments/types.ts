@@ -7,5 +7,6 @@ export default interface IAssignment extends Document {
     details: string
     found: boolean
     finished: boolean
+    permanent: boolean
     created_at: Date
 }

@@ -30,6 +30,11 @@ const AssignmentSchema = new Schema<IAssignment>({
 		required: true,
 		default: false
 	},
+	permanent: {
+		type: Boolean,
+		required: true,
+		default: false
+	},
 	created_at: {
 		type: Date,
 		default: Date.now,

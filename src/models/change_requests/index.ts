@@ -8,21 +8,13 @@ const ChangeRequestSchema = new Schema<IChangeRequest>({
 		required: true,
 	},
 	address: {
-		street: {
-			type: String,
-			required: true,
-		},
-		number: {
-			type: String,
-			required: true,
-		},
-		district: {
-			type: String,
-		},
-		city: {
-			type: String,
-			required: true,
-		},
+		type: String,
+		required: true,
+	},
+	city: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'City',
+		required: true,
 	},
 	coordinates: {
 		type: [Number, Number],
