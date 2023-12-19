@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt';
 import { Express } from 'express';
+import { FilterQuery } from 'mongoose';
 import { SALT_ROUNDS } from '../constants';
 import { authorization } from '../helpers/authorization';
 import { normalization } from '../helpers/normalization';
 import authPublisher from '../middleware/authPublisher';
 import authUser from '../middleware/authUser';
 import Publishers from '../models/publishers';
+import IPublisher from '../models/publishers/types';
 
 export default (app: Express) => {
 
@@ -29,14 +31,34 @@ export default (app: Express) => {
 
 	app.get('/publishers', authUser, async (req, res) => {
 		try {
-			const { skip = 0, limit = 10 } = req.query;
-			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
+			const { skip = 0, limit = 10, search = '' } = req.query;
+			let query: FilterQuery<IPublisher> = req.isMaster ? {} : { congregation: req.user?.congregation }
 
-			const publishers = await Publishers.find(query).select('+passcode').skip(Number(skip)).limit(Number(limit));
+			if (search) {
+				query = { ...query, name: { $regex: search, $options: 'i' } };
+			}
+
+			const publishers = await Publishers.find(query).skip(Number(skip)).limit(Number(limit));
 
 			res.json({ publishers, skip, limit });
 		} catch (error) {
 			res.status(500).json({ message: 'Error to list publishers.' });
+		}
+	});
+
+	app.get('/publishers/all', authUser, async (req, res) => {
+		try {
+			let query: FilterQuery<IPublisher> = req.isMaster ? {} : { congregation: req.user?.congregation }
+
+			if (req.query.search) {
+				query = { ...query, name: { $regex: req.query.search, $options: 'i' } };
+			}
+
+			const publishers = await Publishers.find(query).sort({ name: 1 });
+
+			res.json({ publishers });
+		} catch (error) {
+			res.status(500).json({ message: 'Error to list all publishers.' });
 		}
 	});
 
@@ -68,7 +90,7 @@ export default (app: Express) => {
 
 	app.put('/publishers/reset/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IPublisher> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const code = authorization();
 
@@ -80,13 +102,12 @@ export default (app: Express) => {
 					{ passcode: hashedPasscode },
 					{ new: true }
 				)
-				.select('+passcode');
 
 			if (!publisher) {
 				return res.status(404).json({ message: 'Publisher not found.' });
 			}
 
-			res.json({ publisher: publisher });
+			res.json({ publisher: publisher._id, passcode: code });
 		} catch (error) {
 			res.status(500).json({ message: 'Error to reset publisher.' });
 		}
@@ -96,7 +117,7 @@ export default (app: Express) => {
 		try {
 
 			const newUsername = req.body.name ? normalization(req.body.name) : undefined
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IPublisher> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const publisher = await Publishers.findOneAndUpdate(
 				query,
@@ -121,7 +142,7 @@ export default (app: Express) => {
 
 	app.delete('/publishers/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IPublisher> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const publisher = await Publishers.findOneAndDelete(query);
 

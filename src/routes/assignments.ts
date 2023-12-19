@@ -1,7 +1,9 @@
 import { Express } from 'express';
+import { FilterQuery } from 'mongoose';
 import authPublisher from '../middleware/authPublisher';
 import authUser from '../middleware/authUser';
 import Assignments from '../models/assignments';
+import IAssignment from '../models/assignments/types';
 import Maps from '../models/maps';
 
 export default (app: Express) => {
@@ -24,7 +26,7 @@ export default (app: Express) => {
 	app.get('/assignments', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
-			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
+			const query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation }
 
 			const assignments = await Assignments
 				.find(query)
@@ -143,7 +145,7 @@ export default (app: Express) => {
 
 	app.put('/assignments/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IAssignment> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const assignment = await Assignments.findOneAndUpdate(
 				query,
@@ -166,7 +168,7 @@ export default (app: Express) => {
 
 	app.delete('/assignments/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IAssignment> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const assignment = await Assignments.findOneAndDelete(query);
 

@@ -1,7 +1,9 @@
 import { Express } from 'express';
+import { FilterQuery } from 'mongoose';
 import authUser from '../middleware/authUser';
 import master from '../middleware/master';
 import Cities from '../models/cities';
+import ICity from '../models/cities/types';
 
 export default (app: Express) => {
 
@@ -20,7 +22,7 @@ export default (app: Express) => {
 	app.get('/cities', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
-			const query = req.isMaster ? {} : { congregation: req.user?.congregation };
+			const query: FilterQuery<ICity> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
 			const cities = await Cities.find(query).skip(Number(skip)).limit(Number(limit));
 
@@ -44,7 +46,7 @@ export default (app: Express) => {
 
 	app.put('/cities/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation };
+			const query: FilterQuery<ICity> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation };
 
 			const city = await Cities.findOneAndUpdate(
 				query,

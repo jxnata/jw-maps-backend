@@ -1,6 +1,8 @@
 import { Express } from 'express';
+import { FilterQuery } from 'mongoose';
 import authUser from '../middleware/authUser';
 import Maps from '../models/maps';
+import IMap from '../models/maps/types';
 
 export default (app: Express) => {
 
@@ -22,7 +24,7 @@ export default (app: Express) => {
 	app.get('/maps', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
-			const query = req.isMaster ? {} : { congregation: req.user?.congregation }
+			const query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation }
 
 			const maps = await Maps.find(query).populate(['city', 'last_visited_by']).skip(Number(skip)).limit(Number(limit));
 
@@ -47,7 +49,7 @@ export default (app: Express) => {
 
 	app.put('/maps/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IMap> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const map = await Maps.findOneAndUpdate(
 				query,
@@ -70,7 +72,7 @@ export default (app: Express) => {
 
 	app.delete('/maps/:id', authUser, async (req, res) => {
 		try {
-			const query = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
+			const query: FilterQuery<IMap> = req.isMaster ? { _id: req.params.id } : { _id: req.params.id, congregation: req.user?.congregation }
 
 			const map = await Maps.findOneAndDelete(query);
 
