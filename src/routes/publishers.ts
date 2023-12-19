@@ -6,6 +6,7 @@ import { authorization } from '../helpers/authorization';
 import { normalization } from '../helpers/normalization';
 import authPublisher from '../middleware/authPublisher';
 import authUser from '../middleware/authUser';
+import Assignments from '../models/assignments';
 import Publishers from '../models/publishers';
 import IPublisher from '../models/publishers/types';
 
@@ -149,6 +150,8 @@ export default (app: Express) => {
 			if (!publisher) {
 				return res.status(404).json({ message: 'Publisher not found.' });
 			}
+
+			await Assignments.deleteMany({ publisher: publisher._id });
 
 			res.json({ message: 'Publisher deleted successfully' });
 		} catch (error) {

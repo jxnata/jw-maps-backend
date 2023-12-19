@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import { FilterQuery } from 'mongoose';
 import authUser from '../middleware/authUser';
+import Assignments from '../models/assignments';
 import Maps from '../models/maps';
 import IMap from '../models/maps/types';
 
@@ -79,6 +80,8 @@ export default (app: Express) => {
 			if (!map) {
 				return res.status(404).json({ message: 'Map not found.' });
 			}
+
+			await Assignments.deleteMany({ map: map._id });
 
 			res.json({ message: 'Map deleted successfully' });
 		} catch (error) {

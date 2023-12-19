@@ -4,6 +4,7 @@ import authUser from '../middleware/authUser';
 import master from '../middleware/master';
 import Cities from '../models/cities';
 import ICity from '../models/cities/types';
+import Maps from '../models/maps';
 
 export default (app: Express) => {
 
@@ -74,6 +75,8 @@ export default (app: Express) => {
 			if (!city) {
 				return res.status(404).json({ message: 'City not found.' });
 			}
+
+			await Maps.deleteMany({ city: city._id });
 
 			res.json({ message: 'City deleted successfully' });
 		} catch (error) {

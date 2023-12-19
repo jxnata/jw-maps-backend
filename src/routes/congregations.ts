@@ -1,7 +1,11 @@
 import { Express } from 'express';
 import authUser from '../middleware/authUser';
 import master from '../middleware/master';
+import Assignments from '../models/assignments';
 import Congregations from '../models/congregations';
+import Maps from '../models/maps';
+import Publishers from '../models/publishers';
+import Users from '../models/users';
 
 export default (app: Express) => {
 
@@ -66,6 +70,11 @@ export default (app: Express) => {
 			if (!congregation) {
 				return res.status(404).json({ message: 'Congregation not found.' });
 			}
+
+			await Maps.deleteMany({ congregation: congregation._id });
+			await Assignments.deleteMany({ congregation: congregation._id });
+			await Publishers.deleteMany({ congregation: congregation._id });
+			await Users.deleteMany({ congregation: congregation._id });
 
 			res.json({ message: 'Congregation deleted successfully' });
 		} catch (error) {
