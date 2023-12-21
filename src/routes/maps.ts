@@ -24,8 +24,19 @@ export default (app: Express) => {
 
 	app.get('/maps', authUser, async (req, res) => {
 		try {
-			const { skip = 0, limit = 10 } = req.query;
-			const query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation }
+			const { skip = 0, limit = 10, search = '' } = req.query;
+
+			let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation }
+
+			if (search) {
+				query = {
+					...query,
+					$or: [
+						{ name: { $regex: search, $options: 'i' } },
+						{ address: { $regex: search, $options: 'i' } }
+					]
+				};
+			}
 
 			const maps = await Maps.find(query).populate(['city', 'last_visited_by']).skip(Number(skip)).limit(Number(limit));
 

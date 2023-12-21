@@ -22,8 +22,13 @@ export default (app: Express) => {
 
 	app.get('/cities', authUser, async (req, res) => {
 		try {
-			const { skip = 0, limit = 10 } = req.query;
-			const query: FilterQuery<ICity> = req.isMaster ? {} : { congregation: req.user?.congregation };
+			const { skip = 0, limit = 10, search = '' } = req.query;
+
+			let query: FilterQuery<ICity> = req.isMaster ? {} : { congregation: req.user?.congregation }
+
+			if (search) {
+				query = { ...query, name: { $regex: search, $options: 'i' } };
+			}
 
 			const cities = await Cities.find(query).skip(Number(skip)).limit(Number(limit));
 

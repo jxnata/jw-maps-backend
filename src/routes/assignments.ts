@@ -25,8 +25,20 @@ export default (app: Express) => {
 
 	app.get('/assignments', authUser, async (req, res) => {
 		try {
-			const { skip = 0, limit = 10 } = req.query;
-			const query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation }
+			const { skip = 0, limit = 10, search = '' } = req.query;
+
+			let query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation }
+
+			if (search) {
+				query = {
+					...query,
+					$or: [
+						{ 'publisher.name': { $regex: search, $options: 'i' } },
+						{ 'map.address': { $regex: search, $options: 'i' } },
+						{ 'city.name': { $regex: search, $options: 'i' } }
+					]
+				};
+			}
 
 			const assignments = await Assignments
 				.find(query)
