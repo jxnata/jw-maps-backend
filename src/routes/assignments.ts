@@ -82,12 +82,12 @@ export default (app: Express) => {
 		}
 	});
 
-	app.get('/assignments/map/:id', authPublisher, async (req, res) => {
+	app.get('/assignments/map/:id', authUser, async (req, res) => {
 		try {
 			const { skip = 0, limit = 10 } = req.query;
 
 			const assignments = await Assignments
-				.find({ map: req.query?.map, finished: false })
+				.find({ map: req.query?.id, finished: false })
 				.populate({
 					path: 'map',
 					populate: {
