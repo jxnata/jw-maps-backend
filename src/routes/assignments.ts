@@ -87,7 +87,7 @@ export default (app: Express) => {
 			const { skip = 0, limit = 10 } = req.query;
 
 			const assignments = await Assignments
-				.find({ map: req.query?.id, finished: false })
+				.find({ map: req.params.id, finished: false })
 				.populate({
 					path: 'map',
 					populate: {
