@@ -94,7 +94,6 @@ export default (app: Express) => {
 
 			res.json({ assignments, skip, limit });
 		} catch (error) {
-			console.log(error)
 			res.status(500).json({ message: 'Error to list assignments.' });
 		}
 	});
