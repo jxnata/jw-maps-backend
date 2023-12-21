@@ -88,19 +88,13 @@ export default (app: Express) => {
 
 			const assignments = await Assignments
 				.find({ map: req.params.id, finished: false })
-				.populate({
-					path: 'map',
-					populate: {
-						path: 'city',
-						model: 'City',
-						select: 'name'
-					}
-				})
+				.populate('publisher')
 				.skip(Number(skip))
 				.limit(Number(limit));
 
 			res.json({ assignments, skip, limit });
 		} catch (error) {
+			console.log(error)
 			res.status(500).json({ message: 'Error to list assignments.' });
 		}
 	});
