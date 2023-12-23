@@ -12,6 +12,12 @@ export default (app: Express) => {
 		try {
 			const { congregation } = req.body;
 
+			const exists = await Assignments.findOne({ map: req.body.map, finished: false, congregation });
+
+			if (exists) {
+				return res.status(400).json({ message: 'Map already assigned.' });
+			}
+
 			const assignment = await new Assignments({
 				...req.body,
 				congregation: req.user?.congregation || congregation,

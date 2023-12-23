@@ -46,6 +46,23 @@ export default (app: Express) => {
 		}
 	});
 
+	app.get('/maps/unassigned', authUser, async (req, res) => {
+		try {
+			const { skip = 0, limit = 10 } = req.query;
+
+			let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation }
+
+			const maps = await Maps.find({
+				...query,
+				_id: { $nin: await Assignments.distinct('map', { finished: false, ...query }) }
+			}).populate(['city', 'last_visited_by']);
+
+			res.json({ maps, skip, limit });
+		} catch (error) {
+			res.status(500).json({ message: 'Error to list maps.' });
+		}
+	});
+
 	app.get('/maps/:id', async (req, res) => {
 		try {
 			const map = await Maps.findById(req.params.id).populate(['city', 'last_visited_by']);
@@ -53,6 +70,7 @@ export default (app: Express) => {
 			if (!map) {
 				return res.status(404).json({ message: 'Map not found.' });
 			}
+
 			res.json({ map });
 		} catch (error) {
 			res.status(500).json({ message: 'Error to get map.' });
