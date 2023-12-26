@@ -39,9 +39,9 @@ export default (app: Express) => {
 				query = {
 					...query,
 					$or: [
-						{ 'publisher.name': { $regex: search, $options: 'i' } },
-						{ 'map.address': { $regex: search, $options: 'i' } },
-						{ 'city.name': { $regex: search, $options: 'i' } }
+						{ publisher: { $elemMatch: { name: { $regex: search, $options: 'i' } } } },
+						{ map: { $elemMatch: { address: { $regex: search, $options: 'i' } } } },
+						{ city: { $elemMatch: { name: { $regex: search, $options: 'i' } } } }
 					]
 				};
 			}
