@@ -1,7 +1,6 @@
 import { Express } from 'express';
 import { FilterQuery } from 'mongoose';
 import authUser from '../middleware/authUser';
-import master from '../middleware/master';
 import Cities from '../models/cities';
 import ICity from '../models/cities/types';
 import Maps from '../models/maps';
@@ -73,7 +72,7 @@ export default (app: Express) => {
 		}
 	});
 
-	app.delete('/cities/:id', master, async (req, res) => {
+	app.delete('/cities/:id', authUser, async (req, res) => {
 		try {
 			const city = await Cities.findByIdAndDelete(req.params.id);
 
