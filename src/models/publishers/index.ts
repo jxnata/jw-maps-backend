@@ -22,6 +22,11 @@ const PublisherSchema = new Schema<IPublisher>({
 		required: true,
 		select: false
 	},
+	privileges: {
+		type: [String],
+		required: true,
+		default: []
+	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Congregation',
