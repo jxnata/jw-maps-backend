@@ -7,13 +7,11 @@ const router = Router();
 
 router.post("/", authUser, async (req, res) => {
 	try {
-		const { name, congregation } = req.body;
-
 		const code = authorization();
 
 		const publisher = await new Publishers({
-			name,
-			congregation: req.user?.congregation || congregation,
+			...req.body,
+			congregation: req.user?.congregation || req.body?.congregation,
 			passcode: code,
 		}).save();
 
