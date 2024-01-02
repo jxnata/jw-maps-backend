@@ -10,12 +10,11 @@ router.get("/", authUser, async (req, res) => {
 	try {
 		const { skip = 0, limit = 10, search = "" } = req.query;
 
-		let query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation };
+		let query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation, finished: false };
 
 		if (search) {
 			query = {
 				...query,
-				finished: false,
 				$or: [
 					{ publisher: { $elemMatch: { name: { $regex: search, $options: "i" } } } },
 					{ map: { $elemMatch: { address: { $regex: search, $options: "i" } } } },
