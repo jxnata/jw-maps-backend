@@ -9,7 +9,6 @@ const router = Router();
 
 router.get("/unassigned", authUser, async (req, res) => {
 	try {
-		const { skip = 0, limit = 10 } = req.query;
 
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
@@ -18,7 +17,7 @@ router.get("/unassigned", authUser, async (req, res) => {
 			_id: { $nin: await Assignments.distinct("map", { finished: false, ...query }) },
 		}).populate(["city", "last_visited_by"]);
 
-		res.json({ maps, skip, limit });
+		res.json({ maps });
 	} catch (error) {
 		res.status(500).json({ message: "Error to list maps." });
 	}
