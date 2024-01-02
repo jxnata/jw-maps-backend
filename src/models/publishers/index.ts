@@ -55,6 +55,6 @@ PublisherSchema.pre<IPublisher>("save", async function (next) {
 	}
 });
 
-const model = mongoose.model<IPublisher>("Publisher", PublisherSchema, "publishers");
+const Publishers = mongoose.model<IPublisher>("Publisher", PublisherSchema, "publishers");
 
-export default model;
+export default Publishers;

@@ -12,6 +12,6 @@ const CongregationSchema = new Schema<ICongregation>({
 	},
 });
 
-const model = mongoose.model<ICongregation>("Congregation", CongregationSchema, "congregations");
+const Congregations = mongoose.model<ICongregation>("Congregation", CongregationSchema, "congregations");
 
-export default model;
+export default Congregations;

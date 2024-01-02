@@ -41,6 +41,6 @@ const AssignmentSchema = new Schema<IAssignment>({
 	},
 });
 
-const model = mongoose.model<IAssignment>("Assignment", AssignmentSchema, "assignments");
+const Assignments = mongoose.model<IAssignment>("Assignment", AssignmentSchema, "assignments");
 
-export default model;
+export default Assignments;

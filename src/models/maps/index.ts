@@ -37,6 +37,6 @@ const MapSchema = new Schema<IMap>({
 	},
 });
 
-const model = mongoose.model<IMap>("Map", MapSchema, "maps");
+const Maps = mongoose.model<IMap>("Map", MapSchema, "maps");
 
-export default model;
+export default Maps;

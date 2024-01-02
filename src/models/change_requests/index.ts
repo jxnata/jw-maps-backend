@@ -29,6 +29,6 @@ const ChangeRequestSchema = new Schema<IChangeRequest>({
 	},
 });
 
-const model = mongoose.model<IChangeRequest>("ChangeRequest", ChangeRequestSchema, "change_requests");
+const ChangeRequests = mongoose.model<IChangeRequest>("ChangeRequest", ChangeRequestSchema, "change_requests");
 
-export default model;
+export default ChangeRequests;
