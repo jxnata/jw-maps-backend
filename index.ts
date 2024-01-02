@@ -17,7 +17,7 @@ const run = async () => {
 	app.use(express.urlencoded({ limit: '4mb', extended: true }))
 	app.use(express.json())
 
-	routes(app)
+	app.use(routes)
 
 	cron.start()
 
