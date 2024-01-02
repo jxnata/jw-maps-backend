@@ -14,7 +14,7 @@ router.get("/resume", authUser, async (req, res) => {
 
 		const publishers = await Publishers.count(query);
 		const maps = await Maps.count(query);
-		const assignments = await Assignments.count(query);
+		const assignments = await Assignments.count({ ...query, finished: false });
 		const cities = await Cities.count(query);
 
 		res.json({ publishers, maps, assignments, cities });
