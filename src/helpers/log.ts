@@ -1,3 +1,3 @@
 export const log = (item: any) => {
-    console.log('server log ==>', item)
-}
+	console.log("server log ==>", item);
+};

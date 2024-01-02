@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt';
-import mongoose, { CallbackError, Schema } from 'mongoose';
-import { SALT_ROUNDS } from '../../constants';
-import IUser from './types';
+import bcrypt from "bcrypt";
+import mongoose, { CallbackError, Schema } from "mongoose";
+import { SALT_ROUNDS } from "../../constants";
+import IUser from "./types";
 
 const UserSchema = new Schema<IUser>({
 	name: {
@@ -21,17 +21,17 @@ const UserSchema = new Schema<IUser>({
 	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Congregation',
+		ref: "Congregation",
 		required: true,
 	},
 	created_at: {
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-UserSchema.pre<IUser>('save', async function (next) {
-	if (!this.isModified('password')) return next();
+UserSchema.pre<IUser>("save", async function (next) {
+	if (!this.isModified("password")) return next();
 
 	try {
 		const hashedPassword = await bcrypt.hash(this.password, SALT_ROUNDS);
@@ -42,6 +42,6 @@ UserSchema.pre<IUser>('save', async function (next) {
 	}
 });
 
-const model = mongoose.model<IUser>('User', UserSchema, 'users')
+const model = mongoose.model<IUser>("User", UserSchema, "users");
 
-export default model
+export default model;

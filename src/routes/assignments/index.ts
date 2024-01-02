@@ -1,15 +1,14 @@
-
-import { Router } from 'express';
-import create from './create';
-import remove from './delete';
-import finish from './finish';
-import history from './history';
-import list from './list';
-import map from './map';
-import my from './my';
-import publisher from './publisher';
-import update from './update';
-import view from './view';
+import { Router } from "express";
+import create from "./create";
+import remove from "./delete";
+import finish from "./finish";
+import history from "./history";
+import list from "./list";
+import map from "./map";
+import my from "./my";
+import publisher from "./publisher";
+import update from "./update";
+import view from "./view";
 
 const router = Router();
 

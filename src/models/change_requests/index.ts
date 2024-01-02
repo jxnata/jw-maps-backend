@@ -1,10 +1,10 @@
-import mongoose, { Schema } from 'mongoose'
-import IChangeRequest from './types'
+import mongoose, { Schema } from "mongoose";
+import IChangeRequest from "./types";
 
 const ChangeRequestSchema = new Schema<IChangeRequest>({
 	map: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Map',
+		ref: "Map",
 		required: true,
 	},
 	address: {
@@ -13,7 +13,7 @@ const ChangeRequestSchema = new Schema<IChangeRequest>({
 	},
 	city: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'City',
+		ref: "City",
 		required: true,
 	},
 	coordinates: {
@@ -27,8 +27,8 @@ const ChangeRequestSchema = new Schema<IChangeRequest>({
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-const model = mongoose.model<IChangeRequest>('ChangeRequest', ChangeRequestSchema, 'change_requests')
+const model = mongoose.model<IChangeRequest>("ChangeRequest", ChangeRequestSchema, "change_requests");
 
-export default model
+export default model;

@@ -1,46 +1,46 @@
-import mongoose, { Schema } from 'mongoose';
-import IAssignment from './types';
+import mongoose, { Schema } from "mongoose";
+import IAssignment from "./types";
 
 const AssignmentSchema = new Schema<IAssignment>({
 	publisher: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Publisher',
+		ref: "Publisher",
 		required: true,
 	},
 	map: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Map',
+		ref: "Map",
 		required: true,
 	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Congregation',
+		ref: "Congregation",
 		required: true,
 	},
 	found: {
 		type: Boolean,
 		required: true,
-		default: false
+		default: false,
 	},
 	details: {
-		type: String
+		type: String,
 	},
 	finished: {
 		type: Boolean,
 		required: true,
-		default: false
+		default: false,
 	},
 	permanent: {
 		type: Boolean,
 		required: true,
-		default: false
+		default: false,
 	},
 	created_at: {
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-const model = mongoose.model<IAssignment>('Assignment', AssignmentSchema, 'assignments')
+const model = mongoose.model<IAssignment>("Assignment", AssignmentSchema, "assignments");
 
-export default model
+export default model;

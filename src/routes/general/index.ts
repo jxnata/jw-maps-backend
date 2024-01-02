@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import resume from './resume';
+import { Router } from "express";
+import resume from "./resume";
 
 const router = Router();
 

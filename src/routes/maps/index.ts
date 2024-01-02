@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import all from './all';
-import create from './create';
-import remove from './delete';
-import list from './list';
-import unassigned from './unassigned';
-import update from './update';
-import view from './view';
+import { Router } from "express";
+import all from "./all";
+import create from "./create";
+import remove from "./delete";
+import list from "./list";
+import unassigned from "./unassigned";
+import update from "./update";
+import view from "./view";
 
 const router = Router();
 

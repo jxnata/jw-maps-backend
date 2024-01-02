@@ -1,36 +1,35 @@
-import { Router } from 'express';
-import authPublisher from '../../middleware/authPublisher';
-import Assignments from '../../models/assignments';
-import Maps from '../../models/maps';
+import { Router } from "express";
+import authPublisher from "../../middleware/authPublisher";
+import Assignments from "../../models/assignments";
+import Maps from "../../models/maps";
 
 const router = Router();
 
-router.put('/:id/finish', authPublisher, async (req, res) => {
-    try {
+router.put("/:id/finish", authPublisher, async (req, res) => {
+	try {
+		const assignment = await Assignments.findOneAndUpdate(
+			{ _id: req.params.id, publisher: req.publisher?._id, finished: false },
+			{
+				found: req.body.found,
+				details: req.body.details,
+				finished: true,
+			},
+			{ new: true }
+		);
 
-        const assignment = await Assignments.findOneAndUpdate(
-            { _id: req.params.id, publisher: req.publisher?._id, finished: false },
-            {
-                found: req.body.found,
-                details: req.body.details,
-                finished: true
-            },
-            { new: true }
-        );
+		if (!assignment) {
+			return res.status(404).json({ message: "Assignment not found." });
+		}
 
-        if (!assignment) {
-            return res.status(404).json({ message: 'Assignment not found.' });
-        }
+		await Maps.findByIdAndUpdate(assignment?.map, {
+			last_visited: Date.now(),
+			last_visited_by: assignment?.publisher,
+		});
 
-        await Maps.findByIdAndUpdate(assignment?.map, {
-            last_visited: Date.now(),
-            last_visited_by: assignment?.publisher
-        });
-
-        res.json({ assignment: assignment._id });
-    } catch (error) {
-        res.status(500).json({ message: 'Error to update assignment.' });
-    }
+		res.json({ assignment: assignment._id });
+	} catch (error) {
+		res.status(500).json({ message: "Error to update assignment." });
+	}
 });
 
 export default router;

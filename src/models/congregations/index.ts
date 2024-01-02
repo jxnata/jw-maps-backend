@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
-import ICongregation from './types';
+import mongoose, { Schema } from "mongoose";
+import ICongregation from "./types";
 
 const CongregationSchema = new Schema<ICongregation>({
 	name: {
@@ -10,8 +10,8 @@ const CongregationSchema = new Schema<ICongregation>({
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-const model = mongoose.model<ICongregation>('Congregation', CongregationSchema, 'congregations')
+const model = mongoose.model<ICongregation>("Congregation", CongregationSchema, "congregations");
 
-export default model
+export default model;

@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose'
-import IMap from './types'
+import mongoose, { Schema } from "mongoose";
+import IMap from "./types";
 
 const MapSchema = new Schema<IMap>({
 	name: {
@@ -12,7 +12,7 @@ const MapSchema = new Schema<IMap>({
 	},
 	city: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'City',
+		ref: "City",
 		required: true,
 	},
 	coordinates: {
@@ -21,7 +21,7 @@ const MapSchema = new Schema<IMap>({
 	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Congregation',
+		ref: "Congregation",
 		required: true,
 	},
 	last_visited: {
@@ -29,14 +29,14 @@ const MapSchema = new Schema<IMap>({
 	},
 	last_visited_by: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Publisher',
+		ref: "Publisher",
 	},
 	created_at: {
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-const model = mongoose.model<IMap>('Map', MapSchema, 'maps')
+const model = mongoose.model<IMap>("Map", MapSchema, "maps");
 
-export default model
+export default model;

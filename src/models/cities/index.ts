@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
-import ICity from './types';
+import mongoose, { Schema } from "mongoose";
+import ICity from "./types";
 
 const CitySchema = new Schema<ICity>({
 	name: {
@@ -8,15 +8,15 @@ const CitySchema = new Schema<ICity>({
 	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Congregation',
+		ref: "Congregation",
 		required: true,
 	},
 	created_at: {
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-const model = mongoose.model<ICity>('City', CitySchema, 'cities')
+const model = mongoose.model<ICity>("City", CitySchema, "cities");
 
-export default model
+export default model;

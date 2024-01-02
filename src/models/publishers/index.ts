@@ -1,8 +1,8 @@
-import bcrypt from 'bcrypt';
-import mongoose, { CallbackError, Schema } from 'mongoose';
-import { SALT_ROUNDS } from '../../constants';
-import { normalization } from '../../helpers/normalization';
-import IPublisher from './types';
+import bcrypt from "bcrypt";
+import mongoose, { CallbackError, Schema } from "mongoose";
+import { SALT_ROUNDS } from "../../constants";
+import { normalization } from "../../helpers/normalization";
+import IPublisher from "./types";
 
 const PublisherSchema = new Schema<IPublisher>({
 	name: {
@@ -15,36 +15,36 @@ const PublisherSchema = new Schema<IPublisher>({
 		unique: true,
 		lowercase: true,
 		trim: true,
-		select: false
+		select: false,
 	},
 	passcode: {
 		type: String,
 		required: true,
-		select: false
+		select: false,
 	},
 	privileges: {
 		type: [String],
 		required: true,
-		default: []
+		default: [],
 	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Congregation',
+		ref: "Congregation",
 		required: true,
 	},
 	created_at: {
 		type: Date,
 		default: Date.now,
 	},
-})
+});
 
-PublisherSchema.pre<IPublisher>('save', async function (next) {
+PublisherSchema.pre<IPublisher>("save", async function (next) {
 	try {
-		if (this.isModified('name')) {
+		if (this.isModified("name")) {
 			this.username = normalization(this.name);
 		}
 
-		if (this.isModified('passcode')) {
+		if (this.isModified("passcode")) {
 			const hashedPasscode = await bcrypt.hash(this.passcode, SALT_ROUNDS);
 			this.passcode = hashedPasscode;
 		}
@@ -55,6 +55,6 @@ PublisherSchema.pre<IPublisher>('save', async function (next) {
 	}
 });
 
-const model = mongoose.model<IPublisher>('Publisher', PublisherSchema, 'publishers')
+const model = mongoose.model<IPublisher>("Publisher", PublisherSchema, "publishers");
 
-export default model
+export default model;
