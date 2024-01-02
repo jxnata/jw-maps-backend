@@ -15,6 +15,7 @@ router.get("/", authUser, async (req, res) => {
 		if (search) {
 			query = {
 				...query,
+				finished: false,
 				$or: [
 					{ publisher: { $elemMatch: { name: { $regex: search, $options: "i" } } } },
 					{ map: { $elemMatch: { address: { $regex: search, $options: "i" } } } },
