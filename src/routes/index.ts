@@ -19,4 +19,9 @@ router.use("/maps", maps);
 router.use("/publishers", publishers);
 router.use("/users", users);
 
+router.use('/apple-app-site-association', (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json');
+    next();
+});
+
 export default router;
