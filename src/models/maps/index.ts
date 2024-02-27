@@ -10,6 +10,10 @@ const MapSchema = new Schema<IMap>({
 		type: String,
 		required: true,
 	},
+	details: {
+		type: String,
+		required: false,
+	},
 	city: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "City",
