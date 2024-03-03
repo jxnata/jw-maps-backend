@@ -9,7 +9,6 @@ const router = Router();
 
 router.get("/unassigned", authUser, async (req, res) => {
 	try {
-
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
 		const maps = await Maps.find({

@@ -10,7 +10,9 @@ router.get("/", authUser, async (req, res) => {
 	try {
 		const { skip = 0, limit = 10, search = "" } = req.query;
 
-		let query: FilterQuery<IAssignment> = req.isMaster ? {} : { congregation: req.user?.congregation, finished: false };
+		let query: FilterQuery<IAssignment> = req.isMaster
+			? {}
+			: { congregation: req.user?.congregation, finished: false };
 
 		if (search) {
 			query = {
