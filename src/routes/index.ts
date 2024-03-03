@@ -24,4 +24,9 @@ router.use('/apple-app-site-association', (req, res, next) => {
     next();
 });
 
+router.use('/assetlinks.json', (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json');
+    next();
+});
+
 export default router;
