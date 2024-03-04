@@ -25,7 +25,7 @@ router.post("/accept", authPublisher, async (req, res) => {
 		const user = await Users.findById(req.body.user);
 
 		if (!user) {
-			return res.status(400).json({ message: "Invalid assignment." });
+			return res.status(400).json({ message: "Invalid user assignment." });
 		}
 
 		const valid = await verifyMessage({
