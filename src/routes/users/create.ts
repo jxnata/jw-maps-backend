@@ -16,8 +16,8 @@ router.post("/", master, async (req, res) => {
 			return res.status(400).json({ message: "This username already exists." });
 		}
 
-		const private_key = generatePrivateKey()
-		const account = privateKeyToAccount(private_key)
+		const private_key = generatePrivateKey();
+		const account = privateKeyToAccount(private_key);
 
 		const user = await new Users<IUser>({ ...req.body, private_key, address: account.address }).save();
 

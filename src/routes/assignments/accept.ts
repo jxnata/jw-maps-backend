@@ -12,13 +12,17 @@ router.post("/accept", authPublisher, async (req, res) => {
 			return res.status(401).json({ message: "Only publishers can accept assignments." });
 		}
 
-		const exists = await Assignments.findOne({ map: req.body.map, finished: false, congregation: req.publisher?.congregation });
+		const exists = await Assignments.findOne({
+			map: req.body.map,
+			finished: false,
+			congregation: req.publisher?.congregation,
+		});
 
 		if (exists) {
 			return res.status(400).json({ message: "Map already assigned." });
 		}
 
-		const user = await Users.findById(req.body.user)
+		const user = await Users.findById(req.body.user);
 
 		if (!user) {
 			return res.status(400).json({ message: "Invalid assignment." });
@@ -28,7 +32,7 @@ router.post("/accept", authPublisher, async (req, res) => {
 			address: user.address as `0x${string}`,
 			message: JSON.stringify({ map: req.body.map, user: user._id, expiration: req.body.expiration }),
 			signature: req.body.signature,
-		})
+		});
 
 		if (!valid) {
 			return res.status(400).json({ message: "Invalid assignment." });
