@@ -28,7 +28,13 @@ const authUser = (req: Request, res: Response, next: NextFunction) => {
 
 			if (typeof callback !== "string") {
 				(req as Request & { user?: IUser }).user = callback?.user as IUser;
+
+				if (!req.user?.congregation) {
+					return res.status(403).json({ message: "Invalid user." });
+				}
 			}
+
+			req.isMaster = false;
 
 			next();
 		});

@@ -2,7 +2,6 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { Express } from 'express'
 import mongoose from 'mongoose'
-import cron from './src/jobs'
 import routes from './src/routes'
 
 dotenv.config()
@@ -18,8 +17,6 @@ const run = async () => {
 	app.use(express.json())
 	app.use(routes)
 	app.use(express.static('public'));
-
-	cron.start()
 
 	server.listen(process.env.PORT || 3000, () => {
 		console.log(`Server running on port ${process.env.PORT}`)
