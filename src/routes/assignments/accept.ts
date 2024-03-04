@@ -42,7 +42,7 @@ router.post("/accept", authPublisher, async (req, res) => {
 		const current = new Date(Date.now()).toUTCString();
 		const expiration = new Date(req.body.expiration).toUTCString();
 
-		if (current > expiration) {
+		if (new Date(current).getTime() > new Date(expiration).getTime()) {
 			return res.status(400).json({ message: "Expired assignment." });
 		}
 
