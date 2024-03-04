@@ -27,7 +27,7 @@ const authPublisher = (req: Request, res: Response, next: NextFunction) => {
 			}
 
 			if (typeof callback !== "string") {
-				(req as Request & { publisher?: IPublisher }).publisher = callback?.publisher as IPublisher;
+				(req as Request & { publisher: IPublisher }).publisher = callback?.publisher as IPublisher;
 
 				if (!req.publisher?.congregation) {
 					return res.status(403).json({ message: "Invalid publisher." });

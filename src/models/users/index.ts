@@ -19,6 +19,15 @@ const UserSchema = new Schema<IUser>({
 		required: true,
 		select: false,
 	},
+	address: {
+		type: String,
+		required: true,
+	},
+	private_key: {
+		type: String,
+		required: true,
+		select: false,
+	},
 	congregation: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Congregation",

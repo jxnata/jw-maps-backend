@@ -1,4 +1,5 @@
 import { Router } from "express";
+import accept from "./accept";
 import create from "./create";
 import remove from "./delete";
 import finish from "./finish";
@@ -24,6 +25,7 @@ router.use(history);
 router.use(my);
 router.use(map);
 router.use(publisher);
+router.use(accept);
 router.use(restore);
 router.use(yearly_delete);
 

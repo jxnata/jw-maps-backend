@@ -10,7 +10,7 @@ router.post("/users", async (req, res) => {
 	try {
 		const { username, password } = req.body;
 
-		const user = await Users.findOne({ username }).select("+password").populate("congregation");
+		const user = await Users.findOne({ username }).select(["+password", "+private_key"]).populate("congregation");
 
 		if (!user) {
 			return res.status(400).json({ message: "User not found." });
@@ -22,11 +22,11 @@ router.post("/users", async (req, res) => {
 			return res.status(400).json({ message: "Wrong username or password." });
 		}
 
-		const userWithoutPassword = { ...user.toObject(), password: undefined };
+		const userWithoutSecrets = { ...user.toObject(), password: undefined, private_key: undefined };
 
-		const token = jwt.sign({ user: userWithoutPassword }, SECRET_KEY);
+		const token = jwt.sign({ user: userWithoutSecrets }, SECRET_KEY);
 
-		res.json({ user: userWithoutPassword, token });
+		res.json({ user: userWithoutSecrets, token, private_key: user.private_key });
 	} catch (error) {
 		res.status(500).json({ message: "Error to authenticate user" });
 	}

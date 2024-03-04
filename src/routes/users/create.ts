@@ -1,6 +1,8 @@
 import { Router } from "express";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import master from "../../middleware/master";
 import Users from "../../models/users";
+import IUser from "../../models/users/types";
 
 const router = Router();
 
@@ -14,7 +16,10 @@ router.post("/", master, async (req, res) => {
 			return res.status(400).json({ message: "This username already exists." });
 		}
 
-		const user = await new Users(req.body).save();
+		const private_key = generatePrivateKey()
+		const account = privateKeyToAccount(private_key)
+
+		const user = await new Users<IUser>({ ...req.body, private_key, address: account.address }).save();
 
 		res.status(201).json({ user: user._id });
 	} catch (error) {
