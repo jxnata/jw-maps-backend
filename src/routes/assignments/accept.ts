@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { verifyMessage } from "viem";
+import { getAssignmentMessage } from "../../helpers/get-assignment-message";
 import authPublisher from "../../middleware/authPublisher";
 import Assignments from "../../models/assignments";
 import Users from "../../models/users";
@@ -30,7 +31,7 @@ router.post("/accept", authPublisher, async (req, res) => {
 
 		const valid = await verifyMessage({
 			address: user.address as `0x${string}`,
-			message: JSON.stringify({ map: req.body.map, user: user._id, expiration: req.body.expiration }),
+			message: getAssignmentMessage(req.body.map, user._id, req.body.expiration),
 			signature: req.body.signature,
 		});
 
