@@ -16,7 +16,30 @@ router.get("/", authUser, async (req, res) => {
 			query = { ...query, name: { $regex: search, $options: "i" } };
 		}
 
-		const cities = await Cities.find(query).skip(Number(skip)).limit(Number(limit));
+		const withQuery = await Cities.find(query).select("_id").skip(Number(skip)).limit(Number(limit));
+
+		const cities = await Cities.aggregate([
+			{
+				$match: { _id: { $in: withQuery.map(city => city._id) } },
+			},
+			{
+				$lookup: {
+					from: 'maps',
+					localField: '_id',
+					foreignField: 'city',
+					as: 'maps'
+				}
+			},
+			{
+				$project: {
+					_id: 1,
+					name: 1,
+					congregation: 1,
+					created_at: 1,
+					maps_count: { $size: '$maps' }
+				}
+			}
+		]).skip(Number(skip)).limit(Number(limit));
 
 		res.json({ cities, skip, limit });
 	} catch (error) {
