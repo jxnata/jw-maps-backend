@@ -57,7 +57,7 @@ router.get("/", authUser, async (req, res) => {
 					last_visited: 1,
 					last_visited_by: 1,
 					created_at: 1,
-					last_assignment: { $ifNull: [{ $arrayElemAt: ["$assigned._id", 0] }, null] },
+					last_assignment: { $ifNull: [{ $arrayElemAt: ["$last_assignment._id", 0] }, null] },
 				},
 			},
 		]);
