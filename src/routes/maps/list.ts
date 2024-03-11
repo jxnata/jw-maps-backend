@@ -37,8 +37,12 @@ router.get("/", authUser, async (req, res) => {
 					from: "assignments",
 					localField: "_id",
 					foreignField: "map",
-					as: "assigned",
-					pipeline: [{ $match: { finished: false } }],
+					as: "last_assignment",
+					pipeline: [
+						// { $match: { finished: false } }
+						{ $sort: { created_at: -1 } },
+						{ $limit: 1 },
+					],
 				},
 			},
 			{
@@ -53,7 +57,7 @@ router.get("/", authUser, async (req, res) => {
 					last_visited: 1,
 					last_visited_by: 1,
 					created_at: 1,
-					assigned: { $ifNull: [{ $arrayElemAt: ["$assigned._id", 0] }, null] },
+					last_assignment: { $ifNull: [{ $arrayElemAt: ["$assigned._id", 0] }, null] },
 				},
 			},
 		]);
@@ -61,7 +65,7 @@ router.get("/", authUser, async (req, res) => {
 		const populatedMaps = await Maps.populate(maps, [
 			{ path: "city", model: "City" },
 			{ path: "last_visited_by", model: "Publisher" },
-			{ path: "assigned", model: "Assignment" },
+			{ path: "last_assignment", model: "Assignment" },
 		]);
 
 		res.json({ maps: populatedMaps, skip, limit });
