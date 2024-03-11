@@ -1,4 +1,5 @@
-import { Router } from "express";
+import express, { Router } from "express";
+import path from "path";
 import assignments from "./assignments";
 import auth from "./authentication";
 import cities from "./cities";
@@ -21,7 +22,8 @@ router.use("/publishers", publishers);
 router.use("/users", users);
 
 router.use("/apple-app-site-association", files);
-router.use("/.well-known/assetlinks.json", files);
 router.use("/assetlinks.json", files);
+
+router.use('/.well-known', express.static(path.join(__dirname, 'public')));
 
 export default router;
