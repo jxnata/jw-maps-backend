@@ -4,6 +4,7 @@ import remove from "./delete";
 import list from "./list";
 import update from "./update";
 import view from "./view";
+import vinculate from "./vinculate";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use(create);
 router.use(list);
 router.use(update);
 router.use(remove);
+router.use(vinculate);
 
 export default router;

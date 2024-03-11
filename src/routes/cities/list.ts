@@ -24,11 +24,11 @@ router.get("/", authUser, async (req, res) => {
 			},
 			{
 				$lookup: {
-					from: 'maps',
-					localField: '_id',
-					foreignField: 'city',
-					as: 'maps'
-				}
+					from: "maps",
+					localField: "_id",
+					foreignField: "city",
+					as: "maps",
+				},
 			},
 			{
 				$project: {
@@ -36,10 +36,12 @@ router.get("/", authUser, async (req, res) => {
 					name: 1,
 					congregation: 1,
 					created_at: 1,
-					maps_count: { $size: '$maps' }
-				}
-			}
-		]).skip(Number(skip)).limit(Number(limit));
+					maps_count: { $size: "$maps" },
+				},
+			},
+		])
+			.skip(Number(skip))
+			.limit(Number(limit));
 
 		res.json({ cities, skip, limit });
 	} catch (error) {

@@ -1,3 +1,3 @@
 export const getAssignmentMessage = (map: string, user: string, expiration: string) => {
-    return `${map}-${user}-${expiration}`;
-}
+	return `${map}-${user}-${expiration}`;
+};

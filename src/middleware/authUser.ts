@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../constants";
+import Users from "../models/users";
 import IUser from "../models/users/types";
 import master from "./master";
 
@@ -21,13 +22,20 @@ const authUser = (req: Request, res: Response, next: NextFunction) => {
 
 		const token = tokenParts[1];
 
-		jwt.verify(token, SECRET_KEY, (err, callback) => {
+		jwt.verify(token, SECRET_KEY, async (err, callback) => {
 			if (err) {
 				return res.status(403).json({ message: "Invalid authentication token." });
 			}
 
 			if (typeof callback !== "string") {
-				(req as Request & { user?: IUser }).user = callback?.user as IUser;
+				const user_id = callback?.user?._id as IUser;
+				const user = await Users.findById(user_id).populate(["congregation", "publisher"]);
+
+				if (!user) {
+					return res.status(403).json({ message: "User requested not found." });
+				}
+
+				(req as Request & { user?: IUser }).user = user;
 
 				if (!req.user?.congregation) {
 					return res.status(403).json({ message: "Invalid user." });

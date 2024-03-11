@@ -22,6 +22,6 @@ router.use("/publishers", publishers);
 router.use("/users", users);
 
 router.use("/apple-app-site-association", files);
-router.use('/.well-known', express.static(path.join(__dirname, 'public')));
+router.use("/.well-known", express.static(path.join(__dirname, "public")));
 
 export default router;
