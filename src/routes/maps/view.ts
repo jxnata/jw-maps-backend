@@ -19,7 +19,7 @@ router.get("/view/:id", async (req, res) => {
 			last_assignment = last_assignments[0]
 		}
 
-		res.json({ map: { ...map, last_assignment } });
+		res.json({ map: { ...map.toObject(), last_assignment } });
 	} catch (error) {
 		res.status(500).json({ message: "Error to get map." });
 	}
