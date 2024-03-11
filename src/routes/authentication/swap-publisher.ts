@@ -1,12 +1,12 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../constants";
-import authUser from "../../middleware/authUser";
+import authPublisher from "../../middleware/authPublisher";
 import Users from "../../models/users";
 
 const router = Router();
 
-router.post("/swap-publisher", authUser, async (req, res) => {
+router.post("/swap-publisher", authPublisher, async (req, res) => {
 	try {
 		const user = await Users.findOne({ publisher: req.publisher?._id }).populate("congregation");
 
