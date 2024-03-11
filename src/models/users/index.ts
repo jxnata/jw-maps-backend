@@ -33,6 +33,11 @@ const UserSchema = new Schema<IUser>({
 		ref: "Congregation",
 		required: true,
 	},
+	publisher: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Publisher",
+		required: false,
+	},
 	created_at: {
 		type: Date,
 		default: Date.now,

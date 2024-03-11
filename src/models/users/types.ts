@@ -7,5 +7,6 @@ export default interface IUser extends Document {
 	address: string;
 	private_key: string;
 	congregation: mongoose.Types.ObjectId;
+	publisher?: mongoose.Types.ObjectId;
 	created_at: Date;
 }
