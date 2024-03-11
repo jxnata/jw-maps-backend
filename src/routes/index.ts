@@ -21,6 +21,7 @@ router.use("/publishers", publishers);
 router.use("/users", users);
 
 router.use("/apple-app-site-association", files);
+router.use("/.well-known/assetlinks.json", files);
 router.use("/assetlinks.json", files);
 
 export default router;
