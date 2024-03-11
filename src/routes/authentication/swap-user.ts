@@ -6,7 +6,7 @@ import Publishers from "../../models/publishers";
 
 const router = Router();
 
-router.post("/swap", authUser, async (req, res) => {
+router.post("/swap-user", authUser, async (req, res) => {
 	try {
 		if (!req.user?.publisher) {
 			return res.status(400).json({ message: "Publisher not vinculated." });
