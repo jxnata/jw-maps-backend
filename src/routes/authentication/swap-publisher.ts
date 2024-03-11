@@ -16,7 +16,9 @@ router.post("/swap-publisher", authUser, async (req, res) => {
 
 		const token = jwt.sign({ user: user }, SECRET_KEY);
 
-		res.json({ user, token });
+		const userWithoutSecrets = { ...user.toObject(), password: undefined, private_key: undefined };
+
+		res.json({ user: userWithoutSecrets, token, private_key: user.private_key });
 	} catch (error) {
 		res.status(500).json({ message: "Error to swap publisher to user" });
 	}
