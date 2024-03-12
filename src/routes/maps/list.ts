@@ -26,7 +26,7 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit));
+		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit)).sort({ __v: -1, last_visited: 1 });;
 
 		const maps = await Maps.aggregate([
 			{
