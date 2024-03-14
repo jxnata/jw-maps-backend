@@ -5,7 +5,7 @@
 			{
 				"appID": "N9G6UA9982.dev.jxnata.jwtoolkit",
 				"paths": [
-					"/launch/*"
+					"/go/*"
 				]
 			}
 		]
