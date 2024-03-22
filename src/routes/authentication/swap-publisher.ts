@@ -8,7 +8,9 @@ const router = Router();
 
 router.post("/swap-publisher", authPublisher, async (req, res) => {
 	try {
-		const user = await Users.findOne({ publisher: req.publisher?._id }).populate("congregation").select("+private_key");
+		const user = await Users.findOne({ publisher: req.publisher?._id })
+			.populate("congregation")
+			.select("+private_key");
 
 		if (!user) {
 			return res.status(400).json({ message: "User not found." });

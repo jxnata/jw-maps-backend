@@ -23,15 +23,14 @@ router.put("/:id/finish", authPublisher, async (req, res) => {
 
 		let updatedMap: any = {
 			last_visited: Date.now(),
-			last_visited_by: assignment?.publisher
-		}
+			last_visited_by: assignment?.publisher,
+		};
 
 		if (req.body.found) {
 			updatedMap = {
 				...updatedMap,
-				updated_at: Date.now()
-			}
-
+				updated_at: Date.now(),
+			};
 		}
 
 		await Maps.findByIdAndUpdate(assignment?.map, updatedMap);
