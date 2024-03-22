@@ -26,7 +26,7 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit)).sort({ updated_at: -1 });
+		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit)).sort({ updated_at: 'asc' });
 
 		const maps = await Maps.aggregate([
 			{
@@ -56,6 +56,7 @@ router.get("/", authUser, async (req, res) => {
 					last_visited: 1,
 					last_visited_by: 1,
 					created_at: 1,
+					updated_at: 1,
 					last_assignment: { $ifNull: [{ $arrayElemAt: ["$last_assignment._id", 0] }, null] },
 				},
 			},

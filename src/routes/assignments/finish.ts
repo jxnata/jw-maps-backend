@@ -21,11 +21,20 @@ router.put("/:id/finish", authPublisher, async (req, res) => {
 			return res.status(404).json({ message: "Assignment not found." });
 		}
 
-		await Maps.findByIdAndUpdate(assignment?.map, {
+		let updatedMap: any = {
 			last_visited: Date.now(),
-			last_visited_by: assignment?.publisher,
-			updated_at: Date.now(),
-		});
+			last_visited_by: assignment?.publisher
+		}
+
+		if (req.body.found) {
+			updatedMap = {
+				...updatedMap,
+				updated_at: Date.now()
+			}
+
+		}
+
+		await Maps.findByIdAndUpdate(assignment?.map, updatedMap);
 
 		res.json({ assignment: assignment._id });
 	} catch (error) {

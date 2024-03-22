@@ -5,3 +5,4 @@ dotenv.config();
 export const SECRET_KEY = `${process.env.SECRET_KEY}`;
 export const MASTER_SECRET = `${process.env.MASTER_SECRET}`;
 export const SALT_ROUNDS = 10;
+export const DATABASE_URL = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : process.env.DEV_DATABASE_URL

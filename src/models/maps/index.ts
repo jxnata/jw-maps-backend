@@ -40,7 +40,7 @@ const MapSchema = new Schema<IMap>({
 		default: Date.now,
 	},
 	updated_at: {
-		type: Date,
+		type: Number,
 		default: Date.now,
 	},
 });
