@@ -10,7 +10,7 @@ const app: Express = express()
 const server = require('http').createServer(app)
 
 const run = async () => {
-	await mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL! : process.env.DEV_DATABASE_URL!)
+	await mongoose.connect(process.env.DATABASE_URL!)
 
 	app.use(cors())
 	app.use(express.urlencoded({ limit: '4mb', extended: true }))
