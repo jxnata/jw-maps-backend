@@ -10,5 +10,5 @@ export default interface IMap extends Document {
 	last_visited: Date;
 	last_visited_by: mongoose.Types.ObjectId;
 	created_at: Date;
-	updated_at: Date;
+	updated_at: Number;
 }
