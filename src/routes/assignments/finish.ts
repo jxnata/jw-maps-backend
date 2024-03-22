@@ -24,6 +24,7 @@ router.put("/:id/finish", authPublisher, async (req, res) => {
 		await Maps.findByIdAndUpdate(assignment?.map, {
 			last_visited: Date.now(),
 			last_visited_by: assignment?.publisher,
+			updated_at: Date.now(),
 		});
 
 		res.json({ assignment: assignment._id });

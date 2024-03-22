@@ -26,7 +26,7 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit)).sort({ __v: -1, last_visited: 1 });;
+		const withQuery = await Maps.find(query).select("_id").skip(Number(skip)).limit(Number(limit)).sort({ updated_at: -1 });
 
 		const maps = await Maps.aggregate([
 			{
@@ -39,7 +39,6 @@ router.get("/", authUser, async (req, res) => {
 					foreignField: "map",
 					as: "last_assignment",
 					pipeline: [
-						// { $match: { finished: false } }
 						{ $sort: { created_at: -1 } },
 						{ $limit: 1 },
 					],

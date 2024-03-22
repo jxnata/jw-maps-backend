@@ -39,6 +39,10 @@ const MapSchema = new Schema<IMap>({
 		type: Date,
 		default: Date.now,
 	},
+	updated_at: {
+		type: Date,
+		default: Date.now,
+	},
 });
 
 const Maps = mongoose.model<IMap>("Map", MapSchema, "maps");

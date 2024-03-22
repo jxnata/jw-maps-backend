@@ -16,7 +16,7 @@ router.get("/unassigned", authUser, async (req, res) => {
 			_id: { $nin: await Assignments.distinct("map", { finished: false, ...query }) },
 		})
 			.populate(["city", "last_visited_by"])
-			.sort({ __v: -1, last_visited: 1 });
+			.sort({ updated_at: -1 });
 
 		res.json({ maps });
 	} catch (error) {
