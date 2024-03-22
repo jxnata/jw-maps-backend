@@ -6,8 +6,8 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": false,
-    "noEmitOnError": false
+    "noEmit": true,
+    "noEmitOnError": true
   },
   "include": ["./src/**/*.*"],
   "exclude": [
