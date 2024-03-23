@@ -1,6 +1,8 @@
 import { Router } from "express";
 import authUser from "../../middleware/authUser";
 import Assignments from "../../models/assignments";
+import Maps from "../../models/maps";
+import { sendNotification } from "../../services/onesignal/send-notification";
 
 const router = Router();
 
@@ -18,6 +20,17 @@ router.post("/", authUser, async (req, res) => {
 			...req.body,
 			congregation: req.user?.congregation || congregation,
 		}).save();
+
+		const map = await Maps.findById(req.body.map).populate("city");
+
+		if (map) {
+			if (map.city && typeof map.city === "object" && "name" in map.city) {
+				await sendNotification(req.body.publisher, {
+					title: "Você recebeu uma designação",
+					content: `${map.city.name} - ${map.name} \n${map.address}`,
+				});
+			}
+		}
 
 		res.status(201).json({ assignment: assignment._id });
 	} catch (error) {

@@ -1,10 +1,11 @@
 import mongoose, { Document } from "mongoose";
+import ICity from "../cities/types";
 
 export default interface IMap extends Document {
 	name: string;
 	address: string;
 	details?: string;
-	city: mongoose.Types.ObjectId;
+	city: mongoose.Types.ObjectId | ICity;
 	coordinates: [number, number];
 	congregation: mongoose.Types.ObjectId;
 	last_visited: Date;

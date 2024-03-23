@@ -4,6 +4,7 @@ import { getAssignmentMessage } from "../../helpers/get-assignment-message";
 import authPublisher from "../../middleware/authPublisher";
 import Assignments from "../../models/assignments";
 import Users from "../../models/users";
+import { sendNotification } from "../../services/onesignal/send-notification";
 
 const router = Router();
 
@@ -52,6 +53,11 @@ router.post("/accept", authPublisher, async (req, res) => {
 			permanent: false,
 			congregation: req.publisher?.congregation,
 		}).save();
+
+		await sendNotification(req.body.user, {
+			title: "Designação aceita",
+			content: `${req.publisher.name} aceitou a sua designação via QR Code.`,
+		});
 
 		res.status(201).json({ assignment: assignment._id });
 	} catch (error) {
