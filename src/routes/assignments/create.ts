@@ -21,7 +21,9 @@ router.post("/", authUser, async (req, res) => {
 			congregation: req.user?.congregation || congregation,
 		}).save();
 
-		const map = await Maps.findById(req.body.map).populate("city");
+		const map = await Maps.findByIdAndUpdate(req.body.map, {
+			assigned: true,
+		}).populate("city");
 
 		if (map) {
 			if (map.city && typeof map.city === "object" && "name" in map.city) {

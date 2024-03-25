@@ -3,6 +3,7 @@ import { verifyMessage } from "viem";
 import { getAssignmentMessage } from "../../helpers/get-assignment-message";
 import authPublisher from "../../middleware/authPublisher";
 import Assignments from "../../models/assignments";
+import Maps from "../../models/maps";
 import Users from "../../models/users";
 import { sendNotification } from "../../services/onesignal/send-notification";
 
@@ -54,8 +55,12 @@ router.post("/accept", authPublisher, async (req, res) => {
 			congregation: req.publisher?.congregation,
 		}).save();
 
+		const map = await Maps.findByIdAndUpdate(req.body.map, {
+			assigned: true,
+		});
+
 		await sendNotification(req.body.user, {
-			title: "Designação aceita",
+			title: `Designação aceita - ${map?.name}`,
 			content: `${req.publisher.name} aceitou a sua designação via QR Code.`,
 		});
 

@@ -22,6 +22,7 @@ router.put("/:id/finish", authPublisher, async (req, res) => {
 		}
 
 		let updatedMap: any = {
+			assigned: false,
 			last_visited: Date.now(),
 			last_visited_by: assignment?.publisher,
 		};

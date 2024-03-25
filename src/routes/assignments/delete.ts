@@ -3,6 +3,7 @@ import { FilterQuery } from "mongoose";
 import authUser from "../../middleware/authUser";
 import Assignments from "../../models/assignments";
 import IAssignment from "../../models/assignments/types";
+import Maps from "../../models/maps";
 
 const router = Router();
 
@@ -17,6 +18,8 @@ router.delete("/:id", authUser, async (req, res) => {
 		if (!assignment) {
 			return res.status(404).json({ message: "Assignment not found." });
 		}
+
+		await Maps.findByIdAndUpdate(assignment.map, { assigned: false });
 
 		res.json({ message: "Assignment deleted successfully" });
 	} catch (error) {

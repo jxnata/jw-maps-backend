@@ -28,6 +28,11 @@ const MapSchema = new Schema<IMap>({
 		ref: "Congregation",
 		required: true,
 	},
+	assigned: {
+		type: Boolean,
+		default: false,
+		required: true,
+	},
 	last_visited: {
 		type: Date,
 	},

@@ -8,6 +8,7 @@ export default interface IMap extends Document {
 	city: mongoose.Types.ObjectId | ICity;
 	coordinates: [number, number];
 	congregation: mongoose.Types.ObjectId;
+	assigned: boolean;
 	last_visited: Date;
 	last_visited_by: mongoose.Types.ObjectId;
 	created_at: Date;
