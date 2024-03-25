@@ -11,11 +11,8 @@ router.get("/unassigned", authUser, async (req, res) => {
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
 		const maps = await Maps.find({
-			$or: [
-				{ assigned: false },
-				{ assigned: { $exists: false } }
-			],
-			...query
+			$or: [{ assigned: false }, { assigned: { $exists: false } }],
+			...query,
 		})
 			.populate(["city", "last_visited_by"])
 			.sort({ updated_at: "asc" });
