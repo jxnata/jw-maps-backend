@@ -26,11 +26,7 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		const withQuery = await Maps.find(query)
-			.select("_id")
-			.skip(Number(skip))
-			.limit(Number(limit))
-			.sort({ updated_at: "asc" });
+		const withQuery = await Maps.find(query).select("_id").sort({ updated_at: "asc" });
 
 		const maps = await Maps.aggregate([
 			{

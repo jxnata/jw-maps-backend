@@ -16,7 +16,7 @@ router.get("/", authUser, async (req, res) => {
 			query = { ...query, name: { $regex: search, $options: "i" } };
 		}
 
-		const withQuery = await Cities.find(query).select("_id").skip(Number(skip)).limit(Number(limit));
+		const withQuery = await Cities.find(query).select("_id");
 
 		const cities = await Cities.aggregate([
 			{
@@ -39,9 +39,7 @@ router.get("/", authUser, async (req, res) => {
 					maps_count: { $size: "$maps" },
 				},
 			},
-		])
-			.skip(Number(skip))
-			.limit(Number(limit));
+		]);
 
 		res.json({ cities, skip, limit });
 	} catch (error) {

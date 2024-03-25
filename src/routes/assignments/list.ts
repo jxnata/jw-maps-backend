@@ -25,20 +25,17 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		const assignments = await Assignments.find(query)
-			.populate([
-				"publisher",
-				{
-					path: "map",
-					populate: {
-						path: "city",
-						model: "City",
-						select: "name",
-					},
+		const assignments = await Assignments.find(query).populate([
+			"publisher",
+			{
+				path: "map",
+				populate: {
+					path: "city",
+					model: "City",
+					select: "name",
 				},
-			])
-			.skip(Number(skip))
-			.limit(Number(limit));
+			},
+		]);
 
 		res.json({ assignments, skip, limit });
 	} catch (error) {
