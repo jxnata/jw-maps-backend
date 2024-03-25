@@ -34,6 +34,7 @@ router.get("/all", authUser, async (req, res) => {
 					city: 1,
 					coordinates: 1,
 					congregation: 1,
+					assigned: 1,
 					last_visited: 1,
 					last_visited_by: 1,
 					created_at: 1,
