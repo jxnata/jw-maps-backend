@@ -10,6 +10,13 @@ const router = Router();
 router.put("/:id", authUser, async (req, res) => {
 	try {
 		const newUsername = req.body.name ? normalization(req.body.name) : undefined;
+
+		const exists = await Publishers.find({ username: newUsername });
+
+		if (exists) {
+			return res.status(400).json({ message: "Publisher with this name already exists." });
+		}
+
 		const query: FilterQuery<IPublisher> = req.isMaster
 			? { _id: req.params.id }
 			: { _id: req.params.id, congregation: req.user?.congregation };

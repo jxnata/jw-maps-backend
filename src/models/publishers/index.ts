@@ -12,7 +12,6 @@ const PublisherSchema = new Schema<IPublisher>({
 	username: {
 		type: String,
 		required: false,
-		unique: true,
 		lowercase: true,
 		trim: true,
 		select: false,
