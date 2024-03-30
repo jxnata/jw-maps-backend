@@ -11,13 +11,13 @@ const router = Router();
 router.post("/publishers", async (req, res) => {
 	try {
 		const { username, passcode } = req.body;
-		let congregation: string = req.body.congregation
+		let congregation: string = req.body.congregation;
 
 		if (!congregation) {
-			const first = await Congregations.find().limit(1).select('_id');
+			const first = await Congregations.find().limit(1).select("_id");
 
 			if (first) {
-				congregation = first[0]._id
+				congregation = first[0]._id;
 			}
 		}
 

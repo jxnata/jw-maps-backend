@@ -10,17 +10,19 @@ const router = Router();
 router.post("/users", async (req, res) => {
 	try {
 		const { username, password } = req.body;
-		let congregation: string = req.body.congregation
+		let congregation: string = req.body.congregation;
 
 		if (!congregation) {
-			const first = await Congregations.find().limit(1).select('_id');
+			const first = await Congregations.find().limit(1).select("_id");
 
 			if (first) {
-				congregation = first[0]._id
+				congregation = first[0]._id;
 			}
 		}
 
-		const user = await Users.findOne({ username, congregation }).select(["+password", "+private_key"]).populate("congregation");
+		const user = await Users.findOne({ username, congregation })
+			.select(["+password", "+private_key"])
+			.populate("congregation");
 
 		if (!user) {
 			return res.status(400).json({ message: "User not found." });
