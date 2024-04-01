@@ -1,14 +1,18 @@
 import { Router } from "express";
-import master from "../../middleware/master";
+import { FilterQuery } from "mongoose";
+import authUser from "../../middleware/authUser";
 import Users from "../../models/users";
+import IUser from "../../models/users/types";
 
 const router = Router();
 
-router.get("/", master, async (req, res) => {
+router.get("/", authUser, async (req, res) => {
 	try {
 		const { skip = 0, limit = 10 } = req.query;
 
-		const users = await Users.find().skip(Number(skip)).limit(Number(limit));
+		let query: FilterQuery<IUser> = req.isMaster ? {} : { congregation: req.user?.congregation };
+
+		const users = await Users.find(query).skip(Number(skip)).limit(Number(limit));
 
 		res.json({ users, skip, limit });
 	} catch (error) {
