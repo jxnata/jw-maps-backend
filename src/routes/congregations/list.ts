@@ -1,9 +1,8 @@
 import { Router } from "express";
-import master from "../../middleware/master";
 import Congregations from "../../models/congregations";
 const router = Router();
 
-router.get("/", master, async (req, res) => {
+router.get("/", async (req, res) => {
 	try {
 		const { skip = 0, limit = 10 } = req.query;
 
