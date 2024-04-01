@@ -9,7 +9,16 @@ const router = Router();
 router.post("/", authUser, async (req, res) => {
 	try {
 		const username = normalization(req.body.name);
-		const exists = await Publishers.find({ username });
+
+		let congregation;
+
+		if (req.user && !req.isMaster) {
+			congregation = req.user.congregation;
+		} else {
+			congregation = req.body.congregation;
+		}
+
+		const exists = await Publishers.find({ username, congregation });
 
 		if (exists) {
 			return res.status(400).json({ message: "Publisher with this name already exists." });
@@ -19,7 +28,7 @@ router.post("/", authUser, async (req, res) => {
 
 		const publisher = await new Publishers({
 			...req.body,
-			congregation: req.user?.congregation || req.body?.congregation,
+			congregation,
 			passcode: code,
 		}).save();
 
