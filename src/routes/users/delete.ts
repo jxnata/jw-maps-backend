@@ -6,7 +6,6 @@ const router = Router();
 
 router.delete("/:id", authUser, async (req, res) => {
 	try {
-
 		let user;
 
 		if (req.isMaster) {
