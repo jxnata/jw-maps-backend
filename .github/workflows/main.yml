@@ -7,7 +7,7 @@ on:
 
 jobs:
     build:
-    	runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
         steps:
             - name: Checkout repository
@@ -24,7 +24,7 @@ jobs:
             - name: Run ESLint
               run: yarn lint
 
-            - name: Run Prettier Check
+            - name: Run Prettier
               run: yarn prettier
 
             - name: Run tests
