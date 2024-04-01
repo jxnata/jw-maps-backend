@@ -3,6 +3,7 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../../constants";
 import { normalization } from "../../helpers/normalization";
+import Congregations from "../../models/congregations";
 import Publishers from "../../models/publishers";
 
 const router = Router();
@@ -10,8 +11,17 @@ const router = Router();
 router.post("/publishers", async (req, res) => {
 	try {
 		const { username, passcode } = req.body;
+		let congregation: string = req.body.congregation;
 
-		const publisher = await Publishers.findOne({ username: normalization(username) })
+		if (!congregation) {
+			const first = await Congregations.find().limit(1).select("_id");
+
+			if (first) {
+				congregation = first[0]._id;
+			}
+		}
+
+		const publisher = await Publishers.findOne({ username: normalization(username), congregation })
 			.select("+passcode")
 			.populate("congregation");
 
