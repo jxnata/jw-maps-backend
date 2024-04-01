@@ -28,7 +28,12 @@ router.post("/", authUser, async (req, res) => {
 		const private_key = generatePrivateKey();
 		const account = privateKeyToAccount(private_key);
 
-		const user = await new Users<IUser>({ ...req.body, private_key, congregation, address: account.address }).save();
+		const user = await new Users<IUser>({
+			...req.body,
+			private_key,
+			congregation,
+			address: account.address,
+		}).save();
 
 		res.status(201).json({ user: user._id });
 	} catch (error) {
