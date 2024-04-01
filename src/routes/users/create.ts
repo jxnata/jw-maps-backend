@@ -1,16 +1,24 @@
 import { Router } from "express";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import master from "../../middleware/master";
+import authUser from "../../middleware/authUser";
 import Users from "../../models/users";
 import IUser from "../../models/users/types";
 
 const router = Router();
 
-router.post("/", master, async (req, res) => {
+router.post("/", authUser, async (req, res) => {
 	try {
 		const { username } = req.body;
 
-		const existingUser = await Users.findOne({ username });
+		let congregation;
+
+		if (req.user && !req.isMaster) {
+			congregation = req.user.congregation;
+		} else {
+			congregation = req.body.congregation;
+		}
+
+		const existingUser = await Users.findOne({ username, congregation });
 
 		if (existingUser) {
 			return res.status(400).json({ message: "This username already exists." });

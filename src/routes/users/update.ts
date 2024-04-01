@@ -1,12 +1,20 @@
 import { Router } from "express";
-import master from "../../middleware/master";
+import authUser from "../../middleware/authUser";
 import Users from "../../models/users";
 
 const router = Router();
 
-router.put("/:id", master, async (req, res) => {
+router.put("/:id", authUser, async (req, res) => {
 	try {
-		const user = await Users.findByIdAndUpdate(req.params.id, req.body, { new: true });
+		let congregation;
+
+		if (req.user && !req.isMaster) {
+			congregation = req.user.congregation;
+		} else {
+			congregation = req.body.congregation;
+		}
+
+		const user = await Users.findByIdAndUpdate(req.params.id, { ...req.body, congregation }, { new: true });
 
 		if (!user) {
 			return res.status(404).json({ message: "User not found." });
