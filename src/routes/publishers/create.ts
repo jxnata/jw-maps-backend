@@ -18,7 +18,7 @@ router.post("/", authUser, async (req, res) => {
 			congregation = req.body.congregation;
 		}
 
-		const exists = await Publishers.find({ username, congregation });
+		const exists = await Publishers.findOne({ username, congregation });
 
 		if (exists) {
 			return res.status(400).json({ message: "Publisher with this name already exists." });
