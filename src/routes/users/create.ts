@@ -30,6 +30,7 @@ router.post("/", authUser, async (req, res) => {
 
 		const user = await new Users<IUser>({
 			...req.body,
+			username,
 			private_key,
 			congregation,
 			address: account.address,
