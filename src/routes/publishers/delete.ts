@@ -19,7 +19,9 @@ router.delete("/:id", authUser, async (req, res) => {
 			return res.status(404).json({ message: "Publisher not found." });
 		}
 
-		await Assignments.deleteMany({ publisher: publisher._id });
+		if (publisher.value?._id) {
+			await Assignments.deleteMany({ publisher: publisher.value._id });
+		}
 
 		res.json({ message: "Publisher deleted successfully" });
 	} catch (error) {

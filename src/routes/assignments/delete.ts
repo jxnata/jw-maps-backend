@@ -19,7 +19,9 @@ router.delete("/:id", authUser, async (req, res) => {
 			return res.status(404).json({ message: "Assignment not found." });
 		}
 
-		await Maps.findByIdAndUpdate(assignment.map, { assigned: false });
+		if (assignment.value?.map) {
+			await Maps.findByIdAndUpdate(assignment.value.map, { assigned: false });
+		}
 
 		res.json({ message: "Assignment deleted successfully" });
 	} catch (error) {
