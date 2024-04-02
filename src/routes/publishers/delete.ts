@@ -21,7 +21,6 @@ router.delete("/:id", authUser, async (req, res) => {
 
 		if (publisher.value?._id) {
 			await Assignments.deleteMany({ publisher: publisher.value._id });
-
 		}
 
 		res.json({ message: "Publisher deleted successfully" });
