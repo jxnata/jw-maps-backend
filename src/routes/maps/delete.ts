@@ -19,7 +19,9 @@ router.delete("/:id", authUser, async (req, res) => {
 			return res.status(404).json({ message: "Map not found." });
 		}
 
-		await Assignments.deleteMany({ map: map._id });
+		if (map.value?._id) {
+			await Assignments.deleteMany({ map: map.value._id });
+		}
 
 		res.json({ message: "Map deleted successfully" });
 	} catch (error) {
