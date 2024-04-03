@@ -2,6 +2,7 @@ import { Router } from "express";
 import { FilterQuery } from "mongoose";
 import authUser from "../../middleware/authUser";
 import Assignments from "../../models/assignments";
+import Maps from "../../models/maps";
 import Publishers from "../../models/publishers";
 import IPublisher from "../../models/publishers/types";
 
@@ -13,15 +14,18 @@ router.delete("/:id", authUser, async (req, res) => {
 			? { _id: req.params.id }
 			: { _id: req.params.id, congregation: req.user?.congregation };
 
-		const publisher = await Publishers.findOneAndDelete(query);
+		const publisher = await Publishers.findOneAndDelete(query, { returnDocument: "before" });
 
 		if (!publisher) {
 			return res.status(404).json({ message: "Publisher not found." });
 		}
 
-		if (publisher.value?._id) {
-			await Assignments.deleteMany({ publisher: publisher.value._id });
-		}
+		const assignments = await Assignments.find({ publisher: publisher._id });
+		const map_ids = assignments.map(assignment => assignment.map);
+
+		await Assignments.deleteMany({ publisher: publisher._id });
+
+		await Maps.updateMany({ _id: { $in: map_ids } }, { $set: { assigned: false } });
 
 		res.json({ message: "Publisher deleted successfully" });
 	} catch (error) {

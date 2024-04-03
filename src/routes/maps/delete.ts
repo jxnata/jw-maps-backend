@@ -13,15 +13,13 @@ router.delete("/:id", authUser, async (req, res) => {
 			? { _id: req.params.id }
 			: { _id: req.params.id, congregation: req.user?.congregation };
 
-		const map = await Maps.findOneAndDelete(query);
+		const map = await Maps.findOneAndDelete(query, { returnDocument: "before" });
 
 		if (!map) {
 			return res.status(404).json({ message: "Map not found." });
 		}
 
-		if (map.value?._id) {
-			await Assignments.deleteMany({ map: map.value._id });
-		}
+		await Assignments.deleteMany({ map: map._id });
 
 		res.json({ message: "Map deleted successfully" });
 	} catch (error) {
