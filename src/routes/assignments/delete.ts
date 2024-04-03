@@ -13,15 +13,13 @@ router.delete("/:id", authUser, async (req, res) => {
 			? { _id: req.params.id }
 			: { _id: req.params.id, congregation: req.user?.congregation };
 
-		const assignment = await Assignments.findOneAndDelete(query);
+		const assignment = await Assignments.findOneAndDelete(query, { returnDocument: "before" });
 
 		if (!assignment) {
 			return res.status(404).json({ message: "Assignment not found." });
 		}
 
-		if (assignment.value?.map) {
-			await Maps.findByIdAndUpdate(assignment.value.map, { assigned: false });
-		}
+		await Maps.findByIdAndUpdate(assignment.map, { assigned: false });
 
 		res.json({ message: "Assignment deleted successfully" });
 	} catch (error) {
