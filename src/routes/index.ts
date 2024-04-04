@@ -6,6 +6,7 @@ import cities from "./cities";
 import congregations from "./congregations";
 import files from "./files";
 import general from "./general";
+import go from "./go";
 import maps from "./maps";
 import publishers from "./publishers";
 import scripts from "./scripts";
@@ -22,6 +23,8 @@ router.use("/maps", maps);
 router.use("/publishers", publishers);
 router.use("/users", users);
 router.use("/scripts", scripts);
+
+if (process.env.IS_CYCLIC) router.use("/go/*", go);
 
 router.use("/apple-app-site-association", files);
 router.use("/.well-known", express.static(path.join(__dirname, "public")));
