@@ -9,25 +9,35 @@ const router = Router();
 
 router.put("/:id", authUser, async (req, res) => {
 	try {
-		const newUsername = req.body.name ? normalization(req.body.name) : undefined;
+		const new_username = req.body.name ? normalization(req.body.name) : undefined;
 
-		const exists = await Publishers.find({ username: newUsername });
+		let congregation;
+
+		if (req.user && !req.isMaster) {
+			congregation = req.user.congregation;
+		} else {
+			congregation = req.body.congregation;
+		}
+
+		const exists = await Publishers.findOne({ username: new_username, congregation });
 
 		if (exists) {
-			return res.status(400).json({ message: "Publisher with this name already exists." });
+			if (exists._id !== req.params.id) {
+				return res.status(400).json({ message: "Publisher with this name already exists." });
+			}
 		}
 
 		const query: FilterQuery<IPublisher> = req.isMaster
 			? { _id: req.params.id }
-			: { _id: req.params.id, congregation: req.user?.congregation };
+			: { _id: req.params.id, congregation };
 
 		const publisher = await Publishers.findOneAndUpdate(
 			query,
 			{
 				...req.body,
 				passcode: undefined,
-				username: newUsername,
-				congregation: req.isMaster ? req.body.congregation : req.user?.congregation,
+				username: new_username,
+				congregation,
 			},
 			{ new: true }
 		);
