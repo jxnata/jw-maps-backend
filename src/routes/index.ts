@@ -7,6 +7,7 @@ import congregations from "./congregations";
 import files from "./files";
 import general from "./general";
 import go from "./go";
+import health from "./health";
 import maps from "./maps";
 import publishers from "./publishers";
 import scripts from "./scripts";
@@ -23,6 +24,7 @@ router.use("/maps", maps);
 router.use("/publishers", publishers);
 router.use("/users", users);
 router.use("/scripts", scripts);
+router.use("/health", health);
 
 if (process.env.IS_CYCLIC) router.use("/go/*", go);
 
