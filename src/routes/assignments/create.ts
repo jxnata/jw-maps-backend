@@ -10,6 +10,8 @@ router.post("/", authUser, async (req, res) => {
 	try {
 		const { congregation } = req.body;
 
+		if (!req.body.map) return res.status(400).json({ message: "Map is required." });
+
 		const exists = await Assignments.findOne({ map: req.body.map, finished: false, congregation });
 
 		if (exists) {
