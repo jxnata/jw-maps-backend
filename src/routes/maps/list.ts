@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", authUser, async (req, res) => {
 	try {
-		const { skip = 0, limit = 10, search = "" } = req.query;
+		const { skip = 0, limit = 10, search = "", status = "" } = req.query;
 
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
@@ -24,6 +24,12 @@ router.get("/", authUser, async (req, res) => {
 				...query,
 				$or: [...cityQueries, ...regexQueries],
 			};
+		}
+
+		if (status === "assigned") {
+			query.assigned = true;
+		} else if (status === "unassigned") {
+			query.assigned = { $in: [false, null] };
 		}
 
 		const withQuery = await Maps.find(query)
@@ -72,7 +78,7 @@ router.get("/", authUser, async (req, res) => {
 
 		res.json({ maps: populatedMaps, skip, limit });
 	} catch (error) {
-		res.status(500).json({ message: "Error to list maps." });
+		res.status(500).json({ message: "Failed to list maps due to an internal server error." });
 	}
 });
 
