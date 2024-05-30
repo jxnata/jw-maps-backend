@@ -36,7 +36,7 @@ router.get("/", authUser, async (req, res) => {
 			.select("_id")
 			.skip(Number(skip))
 			.limit(Number(limit))
-			.sort({ updated_at: "asc" });
+			.sort({ updated_at: 1 });
 
 		const maps = await Maps.aggregate([
 			{
