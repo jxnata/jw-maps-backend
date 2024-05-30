@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", authUser, async (req, res) => {
 	try {
-		const { skip = 0, limit = 10, search = "" } = req.query;
+		const { skip = 0, limit = 10, search = "", status = "" } = req.query;
 
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
@@ -24,6 +24,11 @@ router.get("/", authUser, async (req, res) => {
 				...query,
 				$or: [...cityQueries, ...regexQueries],
 			};
+		}
+
+		if (status) {
+			if (status === "assigned") query = { ...query, $and: [{ assigned: true }] };
+			if (status === "unassigned") query = { ...query, $and: [{ $or: [{ assigned: false }, { assigned: { $exists: false } }] }] };
 		}
 
 		const withQuery = await Maps.find(query)
