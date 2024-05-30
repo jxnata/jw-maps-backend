@@ -26,10 +26,10 @@ router.get("/", authUser, async (req, res) => {
 			};
 		}
 
-		if (status) {
-			if (status === "assigned") query = { ...query, $and: [{ assigned: true }] };
-			if (status === "unassigned")
-				query = { ...query, $and: [{ $or: [{ assigned: false }, { assigned: { $exists: false } }] }] };
+		if (status === "assigned") {
+			query.assigned = true;
+		} else if (status === "unassigned") {
+			query.assigned = { $in: [false, null] };
 		}
 
 		const withQuery = await Maps.find(query)
@@ -78,7 +78,7 @@ router.get("/", authUser, async (req, res) => {
 
 		res.json({ maps: populatedMaps, skip, limit });
 	} catch (error) {
-		res.status(500).json({ message: "Error to list maps." });
+		res.status(500).json({ message: "Failed to list maps due to an internal server error." });
 	}
 });
 
