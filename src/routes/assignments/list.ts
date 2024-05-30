@@ -3,6 +3,7 @@ import { FilterQuery } from "mongoose";
 import authUser from "../../middleware/authUser";
 import Assignments from "../../models/assignments";
 import IAssignment from "../../models/assignments/types";
+import Publishers from "../../models/publishers";
 
 const router = Router();
 
@@ -15,13 +16,8 @@ router.get("/", authUser, async (req, res) => {
 			: { congregation: req.user?.congregation, finished: false };
 
 		if (search) {
-			query = {
-				...query,
-				$or: [
-					{ publisher: { $elemMatch: { name: { $regex: search, $options: "i" } } } },
-					{ map: { $elemMatch: { address: { $regex: search, $options: "i" } } } },
-					{ city: { $elemMatch: { name: { $regex: search, $options: "i" } } } },
-				],
+			query["publisher"] = {
+				$in: await Publishers.find({ name: { $regex: search, $options: "i" } }).distinct("_id"),
 			};
 		}
 
