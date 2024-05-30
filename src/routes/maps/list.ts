@@ -28,7 +28,8 @@ router.get("/", authUser, async (req, res) => {
 
 		if (status) {
 			if (status === "assigned") query = { ...query, $and: [{ assigned: true }] };
-			if (status === "unassigned") query = { ...query, $and: [{ $or: [{ assigned: false }, { assigned: { $exists: false } }] }] };
+			if (status === "unassigned")
+				query = { ...query, $and: [{ $or: [{ assigned: false }, { assigned: { $exists: false } }] }] };
 		}
 
 		const withQuery = await Maps.find(query)
