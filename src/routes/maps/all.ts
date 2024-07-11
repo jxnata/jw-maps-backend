@@ -30,6 +30,7 @@ router.get("/all", authUser, async (req, res) => {
 					_id: 1,
 					name: 1,
 					address: 1,
+					district: 1,
 					details: 1,
 					city: 1,
 					coordinates: 1,

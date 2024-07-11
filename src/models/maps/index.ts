@@ -19,6 +19,12 @@ const MapSchema = new Schema<IMap>({
 		ref: "City",
 		required: true,
 	},
+	district: {
+		type: String,
+		required: false,
+		default: "",
+		trim: true,
+	},
 	coordinates: {
 		type: [Number, Number],
 		required: true,
