@@ -4,6 +4,7 @@ import ICity from "../cities/types";
 export default interface IMap extends Document {
 	name: string;
 	address: string;
+	district: string;
 	details?: string;
 	city: mongoose.Types.ObjectId | ICity;
 	coordinates: [number, number];

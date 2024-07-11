@@ -1,6 +1,7 @@
 import { Router } from "express";
 import all from "./all";
 import create from "./create";
+import districts from "./districts";
 import remove from "./delete";
 import list from "./list";
 import unassigned from "./unassigned";
@@ -16,5 +17,6 @@ router.use(update);
 router.use(remove);
 router.use(all);
 router.use(unassigned);
+router.use(districts);
 
 export default router;

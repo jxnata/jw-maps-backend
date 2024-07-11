@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", authUser, async (req, res) => {
 	try {
-		const { skip = 0, limit = 10, search = "", status = "" } = req.query;
+		const { skip = 0, limit = 10, search = "", status = "", district = "" } = req.query;
 
 		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
 
@@ -30,6 +30,10 @@ router.get("/", authUser, async (req, res) => {
 			query.assigned = true;
 		} else if (status === "unassigned") {
 			query.assigned = { $in: [false, null] };
+		}
+
+		if (district) {
+			query.district = district;
 		}
 
 		const withQuery = await Maps.find(query)
@@ -56,6 +60,7 @@ router.get("/", authUser, async (req, res) => {
 					_id: 1,
 					name: 1,
 					address: 1,
+					district: 1,
 					details: 1,
 					city: 1,
 					coordinates: 1,
