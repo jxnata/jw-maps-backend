@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/districts", authUser, async (req, res) => {
 	try {
-		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation };
+		let query: FilterQuery<IMap> = req.isMaster ? {} : { congregation: req.user?.congregation._id };
 
 		const districts = await Maps.aggregate([
 			{
