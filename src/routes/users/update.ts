@@ -1,7 +1,9 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
 import { normalization } from "../../helpers/normalization";
 import authUser from "../../middleware/authUser";
 import Users from "../../models/users";
+import { SALT_ROUNDS } from "../../constants";
 
 const router = Router();
 
@@ -23,6 +25,10 @@ router.put("/:id", authUser, async (req, res) => {
 			if (exists._id !== req.params.id) {
 				return res.status(400).json({ message: "User with this name already exists." });
 			}
+		}
+
+		if (req.body.password) {
+			req.body.password = await bcrypt.hash(req.body.password, SALT_ROUNDS);
 		}
 
 		const user = await Users.findByIdAndUpdate(req.params.id, { ...req.body, congregation }, { new: true });
